@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f2">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Music Practice Kit</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2316624f'/%3E%3Cpath d='M18 18v18a14 14 0 0 0 28 0V18M18 27h28M32 27v23' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f2;
+      --surface: #ffffff;
+      --surface-muted: #f0f0ed;
+      --surface-hover: #e9e9e5;
+      --text: #20211f;
+      --muted: #666963;
+      --line: #dadbd6;
+      --line-strong: #bfc1ba;
+      --accent: #16624f;
+      --accent-hover: #0e503f;
+      --accent-soft: #e1f0ea;
+      --accent-strong: #0a493a;
+      --warning: #9b6212;
+      --warning-soft: #fbefd8;
+      --danger: #b3261e;
+      --danger-soft: #f9e7e5;
+      --focus: #4d8bc7;
+      --blue: #2e668e;
+      --shadow-sm: 0 1px 2px rgba(25, 28, 24, .08), 0 1px 6px rgba(25, 28, 24, .04);
+      --shadow-md: 0 14px 38px rgba(25, 28, 24, .12);
+      --radius: 14px;
+      --header-height: 66px;
+      --bottom-nav-height: 0px;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Yu Gothic UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button, input, select { font: inherit; }
+    button, select { color: inherit; }
+    button { touch-action: manipulation; }
+    button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, audio:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--focus) 55%, transparent);
+      outline-offset: 2px;
+    }
+    [hidden] { display: none !important; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+    .app-header {
+      position: sticky;
+      z-index: 50;
+      top: 0;
+      min-height: var(--header-height);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(18px) saturate(1.18);
+    }
+    .header-inner {
+      width: min(1180px, 100%);
+      min-height: var(--header-height);
+      margin: 0 auto;
+      padding: 10px clamp(14px, 2.8vw, 30px);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border-radius: 11px;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+    .brand-mark svg { width: 21px; height: 21px; display: block; }
+    .brand-copy { min-width: 0; }
+    .brand-name {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 780;
+      line-height: 1.2;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 7px;
+      padding: 1px 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--surface-muted);
+      font-size: 10px;
+      font-weight: 700;
+      vertical-align: 2px;
+    }
+    .brand-meta { margin: 2px 0 0; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .language-button, .header-icon-button {
+      padding: 6px 1px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .language-button { font-size: 12px; font-weight: 780; letter-spacing: .02em; }
+    .language-button:hover, .header-icon-button:hover { color: var(--text); }
+    .header-icon-button { display: grid; place-items: center; }
+    .header-icon-button svg { width: 20px; height: 20px; }
+
+    .main {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 18px clamp(14px, 2.8vw, 30px) calc(54px + var(--bottom-nav-height));
+    }
+    .privacy-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 36px;
+      margin: 0 2px 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .privacy-copy { display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .privacy-copy svg { width: 15px; height: 15px; flex: 0 0 auto; color: var(--accent); }
+    .secure-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); white-space: nowrap; }
+    .secure-badge.good { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 26%, var(--line)); background: var(--accent-soft); }
+    .secure-badge.warn { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 28%, var(--line)); background: var(--warning-soft); }
+
+    .section-anchor { scroll-margin-top: calc(var(--header-height) + 12px); }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+    .panel + .panel, .practice-grid, .build-details { margin-top: 14px; }
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px 0;
+    }
+    .panel-title { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+    .panel-subtitle { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-muted);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 680;
+    }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); }
+    .status-pill.active { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 24%, var(--line)); background: var(--accent-soft); }
+    .status-pill.active .status-dot { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 40px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 720;
+      cursor: pointer;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease, color .15s ease;
+    }
+    .button:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+    .button:active { transform: translateY(1px); }
+    .button svg { width: 17px; height: 17px; }
+    .button.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .button.primary:hover { border-color: var(--accent-hover); background: var(--accent-hover); }
+    .button.soft { border-color: color-mix(in srgb, var(--accent) 22%, var(--line)); background: var(--accent-soft); color: var(--accent-strong); }
+    .button.danger { color: var(--danger); }
+    .button.icon-only { width: 40px; padding: 0; }
+    .button:disabled, select:disabled, input:disabled { opacity: .5; cursor: not-allowed; }
+
+    .segmented, .chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .segmented { padding: 16px 20px 0; }
+    .chip-row { margin-top: 11px; }
+    .segment, .chip {
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+      cursor: pointer;
+    }
+    .segment:hover, .chip:hover { border-color: var(--line-strong); color: var(--text); }
+    .segment.active, .chip.active { border-color: color-mix(in srgb, var(--accent) 42%, var(--line)); background: var(--accent-soft); color: var(--accent-strong); }
+    .chip.locked::after { content: '•'; margin-left: 5px; color: var(--accent); }
+
+    .tuner-body { padding: 18px 20px 20px; }
+    .tuner-stage {
+      position: relative;
+      overflow: hidden;
+      min-height: 330px;
+      padding: 28px 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 50% 22%, color-mix(in srgb, var(--accent-soft) 70%, transparent), transparent 45%),
+        linear-gradient(180deg, #fcfcfa, #f8f8f5);
+      text-align: center;
+    }
+    .tuner-state { color: var(--muted); font-size: 12px; font-weight: 680; }
+    .note-display { margin-top: 8px; font-size: clamp(68px, 10vw, 112px); font-weight: 820; line-height: .96; letter-spacing: -.07em; font-variant-numeric: tabular-nums; }
+    .note-accidental { font-size: .55em; vertical-align: .46em; margin-left: 4px; letter-spacing: 0; }
+    .frequency-display { margin-top: 10px; color: var(--muted); font-size: clamp(20px, 3vw, 26px); font-variant-numeric: tabular-nums; }
+    .frequency-display strong { color: var(--text); font-weight: 760; }
+    .tuner-meter { position: relative; width: min(720px, 94%); height: 98px; margin: 18px auto 0; }
+    .meter-arc {
+      position: absolute;
+      inset: 10px 0 auto;
+      height: 58px;
+      border-radius: 80% 80% 0 0 / 100% 100% 0 0;
+      border-top: 2px solid var(--line-strong);
+    }
+    .meter-center {
+      position: absolute;
+      top: 8px;
+      bottom: 12px;
+      left: 50%;
+      width: 22%;
+      transform: translateX(-50%);
+      border-radius: 12px 12px 4px 4px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 80%, transparent), transparent);
+      border-top: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+    .needle {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      width: 3px;
+      height: 78px;
+      border-radius: 999px;
+      background: var(--warning);
+      transform-origin: 50% 100%;
+      transform: translateX(-50%) rotate(0deg);
+      transition: transform .1s linear, background .12s ease;
+      box-shadow: 0 0 0 1px color-mix(in srgb, #fff 45%, transparent);
+    }
+    .needle.in-tune { background: var(--accent); }
+    .needle-cap { position: absolute; left: 50%; bottom: 4px; width: 12px; height: 12px; border-radius: 50%; transform: translateX(-50%); background: var(--text); }
+    .meter-label { position: absolute; bottom: 0; color: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+    .meter-label.left { left: 0; } .meter-label.mid { left: 50%; transform: translateX(-50%); color: var(--accent); font-weight: 780; } .meter-label.right { right: 0; }
+    .cents-line { display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .cents-value { min-width: 60px; color: var(--text); font-size: 15px; font-weight: 780; font-variant-numeric: tabular-nums; }
+    .tuner-bottom {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: end;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .control-group { min-width: 0; }
+    .control-label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 11px; font-weight: 680; }
+    .inline-control { display: flex; align-items: center; gap: 8px; }
+    .input-number, .select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 7px 10px;
+    }
+    .input-number:hover, .select:hover { border-color: var(--line-strong); }
+    .ref-input { max-width: 110px; text-align: right; font-variant-numeric: tabular-nums; }
+    .mic-main-button { min-width: 168px; min-height: 50px; border-radius: 14px; }
+    .level-wrap { display: flex; align-items: center; gap: 9px; }
+    .level-track { flex: 1; height: 8px; overflow: hidden; border-radius: 999px; background: var(--surface-muted); }
+    .level-fill { width: 0%; height: 100%; border-radius: inherit; background: var(--accent); transition: width .08s linear; }
+    .level-value { width: 42px; text-align: right; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+    .micro-hint { margin: 12px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
+
+    .metronome-body { padding: 18px 20px 20px; }
+    .metro-stage {
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr) 220px;
+      align-items: center;
+      gap: 24px;
+      min-height: 240px;
+    }
+    .play-disc {
+      display: grid;
+      place-items: center;
+      width: 112px;
+      height: 112px;
+      margin: 0 auto;
+      border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+    .play-disc:hover { background: var(--accent-hover); }
+    .play-disc svg { width: 36px; height: 36px; }
+    .metro-center { text-align: center; }
+    .bpm-display { display: flex; align-items: baseline; justify-content: center; gap: 10px; line-height: 1; }
+    .bpm-note { font-size: clamp(30px, 4vw, 46px); font-weight: 500; line-height: 1; color: var(--muted); margin-right: 4px; }
+    .bpm-number { font-size: clamp(60px, 8vw, 86px); font-weight: 820; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+    .bpm-unit { color: var(--muted); font-size: 16px; font-weight: 720; }
+    .tempo-name { margin-top: 7px; color: var(--muted); font-size: 12px; }
+    .bpm-slider { width: min(560px, 100%); margin: 18px auto 0; accent-color: var(--accent); }
+    .bpm-stepper { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+    .bpm-stepper .button { min-width: 56px; }
+    .beats { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+    .beat-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--line-strong); background: var(--surface-muted); transition: transform .06s ease, background .06s ease; }
+    .beat-dot.accent { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+    .beat-dot.active { transform: scale(1.35); background: var(--accent); border-color: var(--accent); }
+    .tap-zone {
+      display: grid;
+      gap: 10px;
+      align-content: center;
+      min-height: 180px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fbfbf9;
+      text-align: center;
+    }
+    .tap-button { min-height: 82px; border-radius: 16px; font-size: 17px; letter-spacing: .04em; }
+    .tap-help { color: var(--muted); font-size: 11px; }
+    .metro-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 40px; }
+    .switch-copy strong { display: block; font-size: 12px; } .switch-copy span { display: block; color: var(--muted); font-size: 10px; }
+    .switch { position: relative; display: inline-block; width: 46px; height: 26px; flex: 0 0 auto; }
+    .switch input { position: absolute; opacity: 0; pointer-events: none; }
+    .switch-track { position: absolute; inset: 0; border-radius: 999px; background: var(--line-strong); transition: background .15s ease; cursor: pointer; }
+    .switch-track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.18); transition: transform .15s ease; }
+    .switch input:checked + .switch-track { background: var(--accent); }
+    .switch input:checked + .switch-track::after { transform: translateX(20px); }
+    .switch input:focus-visible + .switch-track { outline: 3px solid color-mix(in srgb, var(--focus) 55%, transparent); outline-offset: 2px; }
+
+    .practice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .practice-card { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow-sm); }
+    .practice-card.wide { grid-column: 1 / -1; }
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+    .card-head h2 { margin: 0; font-size: 16px; letter-spacing: -.015em; }
+    .card-head p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+    .icon-tile { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--surface-muted); color: var(--accent); flex: 0 0 auto; }
+    .icon-tile svg { width: 18px; height: 18px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .form-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .range-row { display: flex; align-items: center; gap: 10px; }
+    .range-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+    .range-value { width: 52px; color: var(--muted); font-size: 11px; text-align: right; font-variant-numeric: tabular-nums; }
+    .card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+    .timer-display-wrap { display: flex; align-items: center; gap: 18px; }
+    .timer-ring { position: relative; width: 118px; height: 118px; flex: 0 0 auto; }
+    .timer-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .timer-ring circle { fill: none; stroke-width: 8; }
+    .timer-ring .track { stroke: var(--surface-muted); }
+    .timer-ring .progress { stroke: var(--accent); stroke-linecap: round; stroke-dasharray: 301.59; stroke-dashoffset: 0; transition: stroke-dashoffset .3s linear; }
+    .timer-ring-label { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 11px; font-weight: 720; }
+    .timer-time { font-size: clamp(42px, 6vw, 58px); font-weight: 810; letter-spacing: -.045em; line-height: 1; font-variant-numeric: tabular-nums; }
+    .timer-caption { margin-top: 8px; color: var(--muted); font-size: 11px; }
+    .preset-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+
+    .record-stage { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
+    .record-status { min-width: 0; }
+    .record-clock { font-size: 32px; font-weight: 790; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+    .record-detail { color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .record-button { min-width: 130px; min-height: 50px; }
+    .record-button.recording { border-color: var(--danger); background: var(--danger); color: #fff; }
+    .record-playback { margin-top: 13px; padding-top: 13px; border-top: 1px solid var(--line); }
+    .record-playback audio { width: 100%; height: 38px; }
+    .record-meta { margin-top: 7px; color: var(--muted); font-size: 10px; overflow-wrap: anywhere; }
+
+    .spectrum-wrap { position: relative; min-height: 250px; border: 1px solid var(--line); border-radius: 13px; overflow: hidden; background: #fbfbf9; }
+    #spectrumCanvas { display: block; width: 100%; height: 250px; }
+    .spectrum-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--muted); font-size: 12px; text-align: center; pointer-events: none; }
+    .spectrum-axis { display: flex; justify-content: space-between; padding: 6px 3px 0; color: var(--muted); font-size: 9px; }
+
+    details.build-details { border: 1px solid var(--line); border-radius: 13px; background: var(--surface); overflow: hidden; box-shadow: var(--shadow-sm); }
+    details.build-details summary { cursor: pointer; padding: 13px 16px; color: var(--muted); font-size: 11px; font-weight: 720; }
+    .build-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 16px 16px; }
+    .build-item { padding: 10px; border-radius: 9px; background: var(--surface-muted); }
+    .build-item span { display: block; color: var(--muted); font-size: 9px; } .build-item strong { display: block; margin-top: 2px; font-size: 11px; overflow-wrap: anywhere; }
+    footer { width: min(1180px, 100%); margin: 0 auto; padding: 0 clamp(14px, 2.8vw, 30px) 30px; color: var(--muted); font-size: 11px; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: calc(18px + var(--bottom-nav-height));
+      z-index: 90;
+      max-width: min(380px, calc(100vw - 36px));
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+      font-size: 12px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .confirm-dialog { width: min(420px, calc(100% - 24px)); }
+    .confirm-dialog .dialog-body { padding-top: 16px; }
+    .confirm-message { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .confirm-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+    .confirm-actions .button { min-height: 44px; }
+    .button.danger-solid { border-color: var(--danger); background: var(--danger); color: #fff; }
+    .button.danger-solid:hover { border-color: #8f2019; background: #8f2019; }
+
+    dialog {
+      width: min(660px, calc(100% - 28px));
+      max-height: min(780px, calc(100dvh - 28px));
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-md);
+    }
+    dialog::backdrop { background: rgba(15, 17, 14, .50); backdrop-filter: blur(4px); }
+    .dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .dialog-header h2 { margin: 0; font-size: 17px; }
+    .dialog-close { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
+    .dialog-close:hover { background: var(--surface-hover); } .dialog-close svg { width: 19px; height: 19px; }
+    .dialog-body { padding: 19px 20px 26px; overflow: auto; max-height: calc(100dvh - 92px); }
+    .dialog-body h3 { margin: 24px 0 8px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; }
+    .dialog-body h3:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+    .dialog-body p, .dialog-body li { color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .dialog-body p { margin: 7px 0 0; } .dialog-body ul, .dialog-body ol { margin: 7px 0 0; padding-left: 22px; } .dialog-body li + li { margin-top: 6px; }
+    .dialog-note { margin-top: 12px; padding: 11px 12px; border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); border-radius: 10px; background: var(--accent-soft); color: var(--text) !important; }
+
+    .bottom-nav { display: none; }
+
+    @media (max-width: 920px) {
+      .metro-stage { grid-template-columns: 130px minmax(0, 1fr); }
+      .tap-zone { grid-column: 1 / -1; min-height: 120px; grid-template-columns: 1fr 1fr; align-items: center; }
+      .tap-button { min-height: 64px; }
+      .practice-grid { grid-template-columns: 1fr; }
+      .practice-card.wide { grid-column: auto; }
+    }
+
+    @media (max-width: 680px) {
+      :root { --header-height: 58px; --bottom-nav-height: calc(68px + env(safe-area-inset-bottom)); }
+      .header-inner { padding-block: 8px; }
+      .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+      .brand-name { font-size: 15px; }
+      .brand-meta { display: none; }
+      .main { padding: 10px 10px calc(28px + var(--bottom-nav-height)); }
+      .privacy-strip { margin: 0 4px 9px; min-height: 32px; }
+      .privacy-copy span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .panel { border-radius: 16px; }
+      .panel-head { padding: 15px 14px 0; }
+      .panel-title { font-size: 16px; }
+      .panel-subtitle { display: none; }
+      .segmented { padding: 13px 14px 0; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+      .segmented::-webkit-scrollbar, .chip-row::-webkit-scrollbar { display: none; }
+      .segment { flex: 0 0 auto; min-height: 36px; padding-inline: 12px; }
+      .tuner-body { padding: 13px 14px 15px; }
+      .tuner-stage { min-height: 330px; padding: 24px 10px 18px; border-radius: 14px; }
+      .note-display { font-size: clamp(76px, 25vw, 100px); }
+      .frequency-display { font-size: 20px; }
+      .tuner-meter { width: 96%; margin-top: 18px; }
+      .tuner-bottom { grid-template-columns: 1fr; gap: 12px; align-items: stretch; }
+      .tuner-bottom .control-group:nth-child(1) { order: 2; }
+      .tuner-bottom .control-group:nth-child(3) { order: 3; }
+      .mic-main-button { order: 1; width: 100%; min-height: 52px; }
+      .chip-row { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+      .chip { flex: 0 0 auto; min-height: 36px; }
+      .micro-hint { margin-top: 9px; }
+
+      .metronome-body { padding: 14px; }
+      .metro-stage { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+      .play-disc { order: 2; width: 86px; height: 86px; }
+      .metro-center { order: 1; width: 100%; }
+      .tap-zone { order: 3; width: 100%; min-height: 0; display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 10px; }
+      .tap-button { min-height: 60px; border-radius: 14px; }
+      .tap-help { max-width: 120px; text-align: left; }
+      .bpm-number { font-size: clamp(64px, 19vw, 82px); }
+      .bpm-slider { width: 100%; }
+      .beats { margin-top: 13px; }
+      .metro-options { grid-template-columns: 1fr; gap: 8px; }
+      .metro-options .control-group, .switch-row { padding: 7px 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent); }
+      .metro-options > :last-child { border-bottom: 0; }
+
+      .practice-grid { margin-top: 10px; gap: 10px; }
+      .practice-card { padding: 15px 14px; border-radius: 15px; }
+      .form-grid, .form-grid.three { grid-template-columns: 1fr 1fr; }
+      .timer-display-wrap { gap: 14px; }
+      .timer-ring { width: 96px; height: 96px; }
+      .timer-time { font-size: 42px; }
+      .record-stage { grid-template-columns: 1fr; }
+      .record-button { width: 100%; min-height: 50px; }
+      .spectrum-wrap, #spectrumCanvas { min-height: 210px; height: 210px; }
+      .build-grid { grid-template-columns: 1fr; }
+      footer { padding-bottom: calc(18px + var(--bottom-nav-height)); }
+      .toast { left: 12px; right: 12px; bottom: calc(10px + var(--bottom-nav-height)); max-width: none; }
+
+      .bottom-nav {
+        position: fixed;
+        z-index: 70;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+        border-top: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
+        background: color-mix(in srgb, var(--surface) 94%, transparent);
+        backdrop-filter: blur(18px) saturate(1.15);
+      }
+      .bottom-nav button {
+        display: grid;
+        place-items: center;
+        gap: 2px;
+        min-height: 52px;
+        border: 0;
+        border-radius: 12px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .bottom-nav button.active { color: var(--accent); background: var(--accent-soft); }
+      .bottom-nav svg { width: 20px; height: 20px; }
+
+      dialog { width: 100%; max-width: none; margin: auto 0 0; border-width: 1px 0 0; border-radius: 22px 22px 0 0; max-height: min(86dvh, 760px); }
+      .confirm-dialog { width: 100%; margin: auto 0 0; }
+      .confirm-actions { grid-template-columns: 1fr; }
+      .confirm-actions .button { min-height: 48px; }
+      .dialog-body { max-height: calc(86dvh - 70px); padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
+    }
+
+    @media (max-width: 390px) {
+      .secure-badge { display: none; }
+      .head-actions .status-pill { max-width: 112px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .form-grid, .form-grid.three { grid-template-columns: 1fr; }
+      .timer-display-wrap { align-items: flex-start; }
+      .timer-ring { width: 88px; height: 88px; }
+      .timer-time { font-size: 38px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v7a6 6 0 0 0 12 0V4"/><path d="M6 8h12M12 8v12M9 20h6"/></svg>
+        </div>
+        <div class="brand-copy">
+          <p class="brand-name"><span>Music Practice Kit</span><span class="version-badge" id="versionBadge">v1.0.0</span></p>
+          <p class="brand-meta" data-i18n="brandMeta">チューナー・メトロノーム・練習ツール</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="language-button" id="languageButton" type="button" aria-label="Switch language">EN</button>
+        <button class="header-icon-button" id="helpButton" type="button" data-i18n-title="helpTitle" data-i18n-aria-label="helpTitle" title="使い方と注意事項" aria-label="使い方と注意事項">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.35 2.35 0 1 1 3.72 1.9c-.92.67-1.52 1.12-1.52 2.1"/><path d="M12 17h.01"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="privacy-strip">
+      <div class="privacy-copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8 7 10 4.2-2 7-5.4 7-10V6z"/><path d="m9 12 2 2 4-5"/></svg>
+        <span data-i18n="privacyStrip">音声はブラウザー内で処理。アップロードしません。</span>
+      </div>
+      <span class="secure-badge" id="secureBadge"><span id="secureBadgeText">Mic ready</span></span>
+    </div>
+
+    <!-- APP:BEGIN -->
+    <section class="panel section-anchor" id="tunerSection" aria-labelledby="tunerTitle">
+      <div class="panel-head">
+        <div>
+          <h1 class="panel-title" id="tunerTitle" data-i18n="tunerTitle">チューナー</h1>
+          <p class="panel-subtitle" data-i18n="tunerSubtitle">クロマチック / ギター / ウクレレ / ベース</p>
+        </div>
+        <div class="head-actions">
+          <span class="status-pill" id="micStatusPill"><span class="status-dot"></span><span id="micStatusText" data-i18n="micOff">マイク停止中</span></span>
+        </div>
+      </div>
+
+      <div class="segmented" id="tunerModes" role="group" data-i18n-aria-label="tunerModeLabel" aria-label="チューナーモード">
+        <button class="segment active" type="button" data-mode="chromatic" data-i18n="modeChromatic">クロマチック</button>
+        <button class="segment" type="button" data-mode="guitar" data-i18n="modeGuitar">ギター</button>
+        <button class="segment" type="button" data-mode="ukulele" data-i18n="modeUkulele">ウクレレ</button>
+        <button class="segment" type="button" data-mode="bass" data-i18n="modeBass">ベース</button>
+      </div>
+
+      <div class="tuner-body">
+        <div class="tuner-stage">
+          <div class="tuner-state" id="tunerState" data-i18n="tunerWaiting">マイクを開始すると音程を表示します</div>
+          <div class="note-display" aria-live="polite"><span id="noteMain">A</span><span class="note-accidental" id="noteAccidental"></span><span id="noteOctave">4</span></div>
+          <div class="frequency-display"><strong id="frequencyValue">440.0</strong> Hz <span aria-hidden="true">·</span> <span id="targetFrequency">440.0 Hz</span></div>
+          <div class="tuner-meter" aria-hidden="true">
+            <div class="meter-center"></div>
+            <div class="meter-arc"></div>
+            <div class="needle" id="needle"></div>
+            <div class="needle-cap"></div>
+            <span class="meter-label left">−50</span><span class="meter-label mid">0</span><span class="meter-label right">+50</span>
+          </div>
+          <div class="cents-line"><span id="pitchDirection" data-i18n="pitchWaiting">—</span><span class="cents-value" id="centsValue">0.0 ¢</span></div>
+          <div class="chip-row" id="stringChips" hidden></div>
+          <p class="micro-hint" id="stringHint" hidden data-i18n="stringHint">弦をタップするとその音に固定。もう一度タップで自動に戻ります。</p>
+        </div>
+
+        <div class="tuner-bottom">
+          <div class="control-group">
+            <label class="control-label" for="referencePitch" data-i18n="referencePitch">基準ピッチ A4</label>
+            <div class="inline-control">
+              <input class="input-number ref-input" id="referencePitch" type="number" inputmode="decimal" min="430" max="450" step="0.1" value="440.0">
+              <span class="control-label" style="margin:0">Hz</span>
+            </div>
+          </div>
+
+          <button class="button primary mic-main-button" id="micButton" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/></svg>
+            <span id="micButtonText" data-i18n="startMic">マイクを開始</span>
+          </button>
+
+          <div class="control-group">
+            <label class="control-label" for="noiseGate" data-i18n="inputSensitivity">入力感度</label>
+            <div class="level-wrap">
+              <input id="noiseGate" type="range" min="0" max="100" step="1" value="82" aria-label="Input sensitivity">
+              <span class="level-value" id="noiseGateValue">82%</span>
+            </div>
+            <div class="level-wrap" style="margin-top:8px">
+              <div class="level-track" aria-hidden="true"><div class="level-fill" id="levelFill"></div></div>
+              <span class="level-value" id="levelValue">0%</span>
+            </div>
+          </div>
+        </div>
+        <p class="micro-hint" id="micHint" data-i18n="micHint">マイク入力はスピーカーへ返しません。ハウリングを起こしにくい構成です。</p>
+      </div>
+    </section>
+
+    <section class="panel section-anchor" id="metronomeSection" aria-labelledby="metronomeTitle">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title" id="metronomeTitle" data-i18n="metronomeTitle">メトロノーム</h2>
+          <p class="panel-subtitle" data-i18n="metronomeSubtitle">TAP BPM・拍子・アクセント</p>
+        </div>
+        <div class="head-actions"><span class="status-pill" id="metroStatusPill"><span class="status-dot"></span><span id="metroStatusText" data-i18n="stopped">停止中</span></span></div>
+      </div>
+      <div class="metronome-body">
+        <div class="metro-stage">
+          <button class="play-disc" id="metroPlayButton" type="button" data-i18n-aria-label="startMetronome" aria-label="メトロノームを開始">
+            <svg id="metroPlayIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m9 7 8 5-8 5z"/></svg>
+          </button>
+          <div class="metro-center">
+            <div class="bpm-display"><span class="bpm-note" aria-hidden="true">♩</span><span class="bpm-number" id="bpmNumber">120</span><span class="bpm-unit">BPM</span></div>
+            <div class="tempo-name" id="tempoName">Allegro moderato</div>
+            <input class="bpm-slider" id="bpmSlider" type="range" min="30" max="300" step="1" value="120" aria-label="BPM">
+            <div class="bpm-stepper">
+              <button class="button" id="bpmMinus5" type="button" aria-label="BPM -5">−5</button>
+              <button class="button" id="bpmMinus1" type="button" aria-label="BPM -1">−1</button>
+              <button class="button" id="bpmPlus1" type="button" aria-label="BPM +1">+1</button>
+              <button class="button" id="bpmPlus5" type="button" aria-label="BPM +5">+5</button>
+            </div>
+            <div class="beats" id="beatDots" aria-hidden="true"></div>
+          </div>
+          <div class="tap-zone">
+            <button class="button soft tap-button" id="tapButton" type="button">TAP</button>
+            <span class="tap-help" id="tapHelp" data-i18n="tapHelp">リズムに合わせて3回以上タップ</span>
+          </div>
+        </div>
+        <div class="metro-options">
+          <div class="control-group">
+            <label class="control-label" for="beatsPerBar" data-i18n="beatsPerBar">1小節の拍数</label>
+            <select class="select" id="beatsPerBar">
+              <option value="2">2 / 4</option><option value="3">3 / 4</option><option value="4" selected>4 / 4</option><option value="5">5 / 4</option><option value="6">6 / 4</option><option value="7">7 / 4</option>
+            </select>
+          </div>
+          <div class="switch-row">
+            <div class="switch-copy"><strong data-i18n="accentFirst">1拍目をアクセント</strong><span data-i18n="accentHint">小節頭を高い音で強調</span></div>
+            <label class="switch"><input id="accentToggle" type="checkbox" checked><span class="switch-track"></span></label>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="metroVolume" data-i18n="metronomeVolume">音量</label>
+            <div class="range-row"><input id="metroVolume" type="range" min="0" max="1" step="0.05" value="0.65"><span class="range-value" id="metroVolumeValue">65%</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="practice-grid section-anchor" id="practiceSection">
+      <section class="practice-card" aria-labelledby="droneTitle">
+        <div class="card-head">
+          <div><h2 id="droneTitle" data-i18n="droneTitle">ドローン音</h2><p data-i18n="droneSubtitle">ロングトーン・音程練習の基準音</p></div>
+          <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h3l3-5 4 10 3-5h3"/></svg></div>
+        </div>
+        <div class="form-grid three">
+          <div class="control-group"><label class="control-label" for="droneNote" data-i18n="note">音</label><select class="select" id="droneNote"></select></div>
+          <div class="control-group"><label class="control-label" for="droneWave" data-i18n="wave">波形</label><select class="select" id="droneWave"><option value="sine" data-i18n="sine">サイン</option><option value="triangle" data-i18n="triangle">トライアングル</option></select></div>
+          <div class="control-group"><label class="control-label" for="droneVolume" data-i18n="volume">音量</label><div class="range-row"><input id="droneVolume" type="range" min="0" max="0.35" step="0.01" value="0.12"><span class="range-value" id="droneVolumeValue">34%</span></div></div>
+        </div>
+        <div class="card-actions">
+          <button class="button primary" id="droneButton" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9v6M9 6v12M13 4v16M17 7v10M21 10v4"/></svg><span id="droneButtonText" data-i18n="startDrone">ドローン開始</span></button>
+          <span class="status-pill" id="droneFrequencyPill">A3 · 220.0 Hz</span>
+        </div>
+      </section>
+
+      <section class="practice-card" aria-labelledby="timerTitle">
+        <div class="card-head">
+          <div><h2 id="timerTitle" data-i18n="timerTitle">練習タイマー</h2><p data-i18n="timerSubtitle">集中時間を決めて、練習だけに集中</p></div>
+          <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M9 2h6M12 5v2M12 13l3-2"/></svg></div>
+        </div>
+        <div class="timer-display-wrap">
+          <div class="timer-ring" aria-hidden="true"><svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="48"/><circle class="progress" id="timerProgress" cx="60" cy="60" r="48"/></svg><div class="timer-ring-label" id="timerPercent">100%</div></div>
+          <div><div class="timer-time" id="timerDisplay">10:00</div><div class="timer-caption" id="timerStatusText" data-i18n="timerReady">準備OK</div></div>
+        </div>
+        <div class="preset-row" id="timerPresets">
+          <button class="chip" type="button" data-minutes="5">5m</button><button class="chip active" type="button" data-minutes="10">10m</button><button class="chip" type="button" data-minutes="15">15m</button><button class="chip" type="button" data-minutes="30">30m</button>
+        </div>
+        <div class="form-grid" style="margin-top:10px">
+          <div class="control-group"><label class="control-label" for="customMinutes" data-i18n="customMinutes">カスタム（分）</label><input class="input-number" id="customMinutes" type="number" inputmode="numeric" min="1" max="180" step="1" value="10"></div>
+          <div class="switch-row"><div class="switch-copy"><strong data-i18n="keepAwake">画面を消さない</strong><span id="wakeSupportText" data-i18n="wakeAuto">対応端末のみ</span></div><label class="switch"><input id="wakeToggle" type="checkbox"><span class="switch-track"></span></label></div>
+        </div>
+        <div class="card-actions"><button class="button primary" id="timerStartButton" type="button" data-i18n="start">開始</button><button class="button" id="timerResetButton" type="button" data-i18n="reset">リセット</button></div>
+      </section>
+
+      <section class="practice-card" aria-labelledby="recordTitle">
+        <div class="card-head">
+          <div><h2 id="recordTitle" data-i18n="recordTitle">録音</h2><p data-i18n="recordSubtitle">演奏を端末内で録音して聴き返す</p></div>
+          <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></div>
+        </div>
+        <div class="record-stage">
+          <div class="record-status"><div class="record-clock" id="recordClock">00:00</div><div class="record-detail" id="recordDetail" data-i18n="recordReady">マイクを使って録音します</div></div>
+          <button class="button primary record-button" id="recordButton" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="5"/></svg><span id="recordButtonText" data-i18n="startRecording">録音開始</span></button>
+        </div>
+        <div class="record-playback" id="recordPlayback" hidden>
+          <audio id="recordAudio" controls preload="metadata"></audio>
+          <div class="card-actions"><button class="button" id="downloadRecording" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span data-i18n="saveRecording">録音を保存</span></button><button class="button danger" id="clearRecording" type="button" data-i18n="clearRecording">消去</button></div>
+          <div class="record-meta" id="recordMeta"></div>
+        </div>
+      </section>
+
+      <section class="practice-card" aria-labelledby="micSettingsTitle">
+        <div class="card-head">
+          <div><h2 id="micSettingsTitle" data-i18n="micSettingsTitle">マイク入力</h2><p data-i18n="micSettingsSubtitle">利用できる入力デバイスと状態</p></div>
+          <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></div>
+        </div>
+        <div class="control-group"><label class="control-label" for="audioDevice" data-i18n="inputDevice">入力デバイス</label><select class="select" id="audioDevice" disabled><option value="" data-i18n="defaultDevice">デフォルト</option></select></div>
+        <div class="card-actions"><button class="button" id="refreshDevices" type="button" data-i18n="refreshDevices">デバイスを更新</button><span class="status-pill" id="mediaSupportPill">Web Audio</span></div>
+        <p class="timer-caption" id="micEnvironmentNote" data-i18n="micEnvironmentNote">マイク名は権限を許可した後に表示される場合があります。</p>
+      </section>
+
+      <section class="practice-card wide" aria-labelledby="spectrumTitle">
+        <div class="card-head">
+          <div><h2 id="spectrumTitle" data-i18n="spectrumTitle">周波数スペクトラム</h2><p data-i18n="spectrumSubtitle">マイク入力の低〜中域をリアルタイム表示</p></div>
+          <div class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18M5 16V9M9 16V5M13 16v-4M17 16V7M21 16v-9"/></svg></div>
+        </div>
+        <div class="spectrum-wrap"><canvas id="spectrumCanvas"></canvas><div class="spectrum-empty" id="spectrumEmpty" data-i18n="spectrumEmpty">マイクを開始するとスペクトラムを表示します</div></div>
+        <div class="spectrum-axis"><span>0 Hz</span><span>1 kHz</span><span>2 kHz</span><span>3 kHz</span><span>4 kHz</span></div>
+      </section>
+    </div>
+    <!-- APP:END -->
+
+    <details class="build-details">
+      <summary data-i18n="buildInfo">ビルド情報</summary>
+      <div class="build-grid"><div class="build-item"><span data-i18n="appVersion">アプリバージョン</span><strong id="buildVersion">—</strong></div><div class="build-item"><span data-i18n="builtAt">生成日時</span><strong id="builtAt">—</strong></div><div class="build-item"><span data-i18n="dependencies">内包依存数</span><strong id="dependencyCount">0</strong></div></div>
+    </details>
+  </main>
+
+  <footer><span data-i18n="footer">Music Practice Kit · ローカル処理の単一HTML</span></footer>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <button type="button" class="active" data-target="tunerSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v7a6 6 0 0 0 12 0V4M6 8h12M12 8v12"/></svg><span data-i18n="navTuner">チューナー</span></button>
+    <button type="button" data-target="metronomeSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 20 2-16h4l2 16M7 20h10M11 10h2"/></svg><span data-i18n="navMetro">メトロノーム</span></button>
+    <button type="button" data-target="practiceSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M9 2h6M12 5v2"/></svg><span data-i18n="navPractice">練習</span></button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="sr-only" id="liveStatus" aria-live="polite"></div>
+
+  <dialog class="confirm-dialog" id="confirmDialog" aria-labelledby="confirmTitle">
+    <div class="dialog-header"><h2 id="confirmTitle">確認</h2><button class="dialog-close" id="confirmClose" type="button" data-i18n-aria-label="close" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+    <div class="dialog-body"><p class="confirm-message" id="confirmMessage"></p><div class="confirm-actions"><button class="button" id="confirmCancel" type="button">キャンセル</button><button class="button danger-solid" id="confirmOk" type="button">実行する</button></div></div>
+  </dialog>
+
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="dialog-header"><h2 id="helpTitle" data-i18n="helpTitle">使い方と注意事項</h2><button class="dialog-close" id="closeHelpButton" type="button" data-i18n-aria-label="close" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+    <div class="dialog-body">
+      <!-- APP:HELP:BEGIN -->
+      <h3 data-i18n="helpBasicsTitle">基本操作</h3>
+      <ol><li data-i18n="helpStep1">チューナーの「マイクを開始」を押し、ブラウザーのマイク権限を許可します。楽器モードでは弦をタップすると狙う音を固定できます。</li><li data-i18n="helpStep2">メトロノームはBPMをスライダーか±ボタンで調整できます。TAPをリズムに合わせて3回以上押すとテンポを測れます。</li><li data-i18n="helpStep3">練習ではドローン音、タイマー、録音、スペクトラムを必要なものだけ使えます。</li></ol>
+      <h3 data-i18n="helpPrivacyTitle">プライバシー</h3><p data-i18n="helpPrivacyBody">マイク音声・録音・設定はこのページ内で処理され、このアプリから外部へ送信されません。録音は保存ボタンを押したときだけファイルとして端末へ保存します。</p>
+      <h3 data-i18n="helpTunerTitle">チューナーのコツ</h3><ul><li data-i18n="helpTuner1">周囲が静かな場所で、1音ずつはっきり鳴らすと安定しやすくなります。</li><li data-i18n="helpTuner2">入力感度を上げすぎると周囲の雑音を拾いやすくなります。反応しない場合だけ少し調整してください。</li><li data-i18n="helpTuner3">A4基準ピッチは430.0〜450.0 Hzで変更できます。メトロノームとは独立し、ドローン音にも反映されます。</li></ul>
+      <h3 data-i18n="helpNotesTitle">注意事項</h3><ul><li data-i18n="helpNoteMic">マイク機能はブラウザーの権限と安全なコンテキストの制約を受けます。ローカルHTMLで使えない場合はHTTPSまたはlocalhostで開いてください。</li><li data-i18n="helpNoteRecording">録音形式はブラウザーが対応する形式を自動選択します。録音データはページを閉じると失われます。</li><li data-i18n="helpNoteAudio">メトロノームやドローン音をスピーカーから鳴らすと、録音やチューナーのマイクがその音を拾う場合があります。必要に応じてイヤホンを使ってください。</li><li data-i18n="helpNoteWake">「画面を消さない」は対応ブラウザーでのみ動作し、OSの省電力状態などにより解除されることがあります。</li></ul>
+      <p class="dialog-note" data-i18n="helpOffline">メトロノーム、TAP、ドローン、タイマーはマイク権限がなくても使えます。</p>
+      <!-- APP:HELP:END -->
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const APP_CONFIG = {"$schema":"./schemas/app-config.schema.json","name":"Music Practice Kit","slug":"music-practice-kit","version":"1.0.0","description":"A local-first tuner, metronome, drone, timer, recorder, and spectrum toolkit for instrument practice.","author":"ttomohisa","license":"MIT","languages":["ja","en"]};
+      const BUILD_MANIFEST = {"appName":"Music Practice Kit","appVersion":"1.0.0","generatedAtUtc":"2026-08-16T05:02:18Z","dependencyCount":0,"dependencies":[]};
+      const EMBEDDED_ASSET_BUNDLE_BASE64 = 'eyJkZXBlbmRlbmNpZXMiOnt9fQ==';
+
+      function decodeBase64Utf8(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+        return new TextDecoder().decode(bytes);
+      }
+
+      const embeddedAssets = (() => {
+        try { return JSON.parse(decodeBase64Utf8(EMBEDDED_ASSET_BUNDLE_BASE64)); }
+        catch { return { dependencies: {} }; }
+      })();
+      window.StandaloneAssets = Object.freeze({
+        manifest: BUILD_MANIFEST,
+        list: () => Object.entries(embeddedAssets.dependencies || {}).flatMap(([id, dep]) => Object.keys(dep.assets || {}).map(key => `${id}/${key}`))
+      });
+
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const noteNames = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+      const storageKey = `${APP_CONFIG.slug}:settings`;
+      const defaultSettings = {
+        language: '', referencePitch: 440, tunerMode: 'chromatic', noiseGate: 0.018,
+        bpm: 120, beatsPerBar: 4, accent: true, metroVolume: 0.65,
+        droneMidi: 57, droneWave: 'sine', droneVolume: 0.12,
+        timerMinutes: 10, keepAwake: false
+      };
+
+      const instruments = {
+        chromatic: [],
+        guitar: [{ name: 'E2', midi: 40 }, { name: 'A2', midi: 45 }, { name: 'D3', midi: 50 }, { name: 'G3', midi: 55 }, { name: 'B3', midi: 59 }, { name: 'E4', midi: 64 }],
+        ukulele: [{ name: 'G4', midi: 67 }, { name: 'C4', midi: 60 }, { name: 'E4', midi: 64 }, { name: 'A4', midi: 69 }],
+        bass: [{ name: 'E1', midi: 28 }, { name: 'A1', midi: 33 }, { name: 'D2', midi: 38 }, { name: 'G2', midi: 43 }]
+      };
+
+      const translations = {
+        ja: {
+          brandMeta: 'チューナー・メトロノーム・練習ツール', privacyStrip: '音声はブラウザー内で処理。アップロードしません。',
+          helpTitle: '使い方と注意事項', close: '閉じる', tunerTitle: 'チューナー', tunerSubtitle: 'クロマチック / ギター / ウクレレ / ベース',
+          micOff: 'マイク停止中', micOn: 'マイク入力中', micError: 'マイク利用不可', tunerModeLabel: 'チューナーモード', modeChromatic: 'クロマチック', modeGuitar: 'ギター', modeUkulele: 'ウクレレ', modeBass: 'ベース',
+          tunerWaiting: 'マイクを開始すると音程を表示します', tunerListening: '音を待っています…', tunerLowSignal: '入力が小さいです', tunerDetected: '音程を検出中',
+          pitchWaiting: '—', pitchFlat: '低い', pitchSharp: '高い', pitchInTune: '合っています', referencePitch: '基準ピッチ A4', inputSensitivity: '入力感度', startMic: 'マイクを開始', stopMic: 'マイクを停止',
+          stringHint: '弦をタップするとその音に固定。もう一度タップで自動に戻ります。', micHint: 'マイク入力はスピーカーへ返しません。ハウリングを起こしにくい構成です。',
+          metronomeTitle: 'メトロノーム', metronomeSubtitle: 'TAP BPM・拍子・アクセント', stopped: '停止中', running: '再生中', startMetronome: 'メトロノームを開始', stopMetronome: 'メトロノームを停止', tapHelp: 'リズムに合わせて3回以上タップ', beatsPerBar: '1小節の拍数', accentFirst: '1拍目をアクセント', accentHint: '小節頭を高い音で強調', metronomeVolume: '音量',
+          droneTitle: 'ドローン音', droneSubtitle: 'ロングトーン・音程練習の基準音', note: '音', wave: '波形', volume: '音量', sine: 'サイン', triangle: 'トライアングル', startDrone: 'ドローン開始', stopDrone: 'ドローン停止',
+          timerTitle: '練習タイマー', timerSubtitle: '集中時間を決めて、練習だけに集中', timerReady: '準備OK', timerRunning: '練習中', timerPaused: '一時停止', timerFinished: '完了', customMinutes: 'カスタム（分）', keepAwake: '画面を消さない', wakeAuto: '対応端末のみ', wakeUnsupported: 'この環境では未対応', start: '開始', pause: '一時停止', resume: '再開', reset: 'リセット',
+          recordTitle: '録音', recordSubtitle: '演奏を端末内で録音して聴き返す', recordReady: 'マイクを使って録音します', startRecording: '録音開始', stopRecording: '録音停止', recording: '録音中', saveRecording: '録音を保存', clearRecording: '消去', recordingSaved: '録音を保存しました', recordingCleared: '録音を消去しました', recordingUnsupported: 'このブラウザーは録音機能に対応していません',
+          micSettingsTitle: 'マイク入力', micSettingsSubtitle: '利用できる入力デバイスと状態', inputDevice: '入力デバイス', defaultDevice: 'デフォルト', refreshDevices: 'デバイスを更新', micEnvironmentNote: 'マイク名は権限を許可した後に表示される場合があります。',
+          spectrumTitle: '周波数スペクトラム', spectrumSubtitle: 'マイク入力の低〜中域をリアルタイム表示', spectrumEmpty: 'マイクを開始するとスペクトラムを表示します',
+          navTuner: 'チューナー', navMetro: 'メトロノーム', navPractice: '練習', buildInfo: 'ビルド情報', appVersion: 'アプリバージョン', builtAt: '生成日時', dependencies: '内包依存数', footer: 'Music Practice Kit · ローカル処理の単一HTML',
+          helpBasicsTitle: '基本操作', helpStep1: 'チューナーの「マイクを開始」を押し、ブラウザーのマイク権限を許可します。楽器モードでは弦をタップすると狙う音を固定できます。', helpStep2: 'メトロノームはBPMをスライダーか±ボタンで調整できます。TAPをリズムに合わせて3回以上押すとテンポを測れます。', helpStep3: '練習ではドローン音、タイマー、録音、スペクトラムを必要なものだけ使えます。',
+          helpPrivacyTitle: 'プライバシー', helpPrivacyBody: 'マイク音声・録音・設定はこのページ内で処理され、このアプリから外部へ送信されません。録音は保存ボタンを押したときだけファイルとして端末へ保存します。',
+          helpTunerTitle: 'チューナーのコツ', helpTuner1: '周囲が静かな場所で、1音ずつはっきり鳴らすと安定しやすくなります。', helpTuner2: '入力感度を上げすぎると周囲の雑音を拾いやすくなります。反応しない場合だけ少し調整してください。', helpTuner3: 'A4基準ピッチは430.0〜450.0 Hzで変更できます。メトロノームとは独立し、ドローン音にも反映されます。',
+          helpNotesTitle: '注意事項', helpNoteMic: 'マイク機能はブラウザーの権限と安全なコンテキストの制約を受けます。ローカルHTMLで使えない場合はHTTPSまたはlocalhostで開いてください。', helpNoteRecording: '録音形式はブラウザーが対応する形式を自動選択します。録音データはページを閉じると失われます。', helpNoteAudio: 'メトロノームやドローン音をスピーカーから鳴らすと、録音やチューナーのマイクがその音を拾う場合があります。必要に応じてイヤホンを使ってください。', helpNoteWake: '「画面を消さない」は対応ブラウザーでのみ動作し、OSの省電力状態などにより解除されることがあります。', helpOffline: 'メトロノーム、TAP、ドローン、タイマーはマイク権限がなくても使えます。',
+          secureReady: 'マイク対応環境', secureLimited: 'マイク制限の可能性', micPermissionDenied: 'マイクの使用が許可されませんでした', micStartFailed: 'マイクを開始できませんでした', micStarted: 'マイクを開始しました', micStopped: 'マイクを停止しました', deviceChanged: '入力デバイスを切り替えました', deviceRefreshFailed: 'デバイス一覧を更新できませんでした',
+          timerDoneToast: '練習タイマーが完了しました', wakeOn: '画面スリープを抑制中', wakeFailed: '画面スリープ抑制を開始できませんでした', tapMeasured: 'TAPで {bpm} BPM に設定しました',
+          droneStarted: 'ドローン音を開始しました', droneStopped: 'ドローン音を停止しました', metronomeStarted: 'メトロノームを開始しました', metronomeStopped: 'メトロノームを停止しました',
+          invalidReference: 'A4は430.0〜450.0 Hzで指定してください', selectMicFirst: '録音にはマイクが必要です', recordFailed: '録音を開始できませんでした', nothingToSave: '保存できる録音がありません', confirmTitle: '確認', confirmReplaceRecording: '未保存の録音があります。新しい録音で置き換えますか？', confirmClearRecording: '現在の録音を消去しますか？', cancel: 'キャンセル', replaceRecording: '置き換える', clearRecordingAction: '消去する'
+        },
+        en: {
+          brandMeta: 'Tuner · Metronome · Practice tools', privacyStrip: 'Audio is processed in your browser and is not uploaded.',
+          helpTitle: 'How to use & notes', close: 'Close', tunerTitle: 'Tuner', tunerSubtitle: 'Chromatic / Guitar / Ukulele / Bass',
+          micOff: 'Microphone off', micOn: 'Listening', micError: 'Microphone unavailable', tunerModeLabel: 'Tuner mode', modeChromatic: 'Chromatic', modeGuitar: 'Guitar', modeUkulele: 'Ukulele', modeBass: 'Bass',
+          tunerWaiting: 'Start the microphone to detect pitch', tunerListening: 'Waiting for a note…', tunerLowSignal: 'Input is too quiet', tunerDetected: 'Detecting pitch',
+          pitchWaiting: '—', pitchFlat: 'Flat', pitchSharp: 'Sharp', pitchInTune: 'In tune', referencePitch: 'Reference A4', inputSensitivity: 'Input sensitivity', startMic: 'Start microphone', stopMic: 'Stop microphone',
+          stringHint: 'Tap a string to lock the target. Tap it again to return to automatic mode.', micHint: 'Microphone input is never routed to the speakers, reducing feedback risk.',
+          metronomeTitle: 'Metronome', metronomeSubtitle: 'TAP BPM · Meter · Accent', stopped: 'Stopped', running: 'Playing', startMetronome: 'Start metronome', stopMetronome: 'Stop metronome', tapHelp: 'Tap at least 3 times with the rhythm', beatsPerBar: 'Beats per bar', accentFirst: 'Accent first beat', accentHint: 'Higher click on the bar start', metronomeVolume: 'Volume',
+          droneTitle: 'Drone tone', droneSubtitle: 'Reference tone for long tones and intonation', note: 'Note', wave: 'Wave', volume: 'Volume', sine: 'Sine', triangle: 'Triangle', startDrone: 'Start drone', stopDrone: 'Stop drone',
+          timerTitle: 'Practice timer', timerSubtitle: 'Set a focused practice block', timerReady: 'Ready', timerRunning: 'Practicing', timerPaused: 'Paused', timerFinished: 'Finished', customMinutes: 'Custom minutes', keepAwake: 'Keep screen awake', wakeAuto: 'Supported devices only', wakeUnsupported: 'Not supported here', start: 'Start', pause: 'Pause', resume: 'Resume', reset: 'Reset',
+          recordTitle: 'Recorder', recordSubtitle: 'Record locally, listen back, and save', recordReady: 'Uses the current microphone input', startRecording: 'Start recording', stopRecording: 'Stop recording', recording: 'Recording', saveRecording: 'Save recording', clearRecording: 'Clear', recordingSaved: 'Recording saved', recordingCleared: 'Recording cleared', recordingUnsupported: 'Recording is not supported by this browser',
+          micSettingsTitle: 'Microphone input', micSettingsSubtitle: 'Available input devices and status', inputDevice: 'Input device', defaultDevice: 'Default', refreshDevices: 'Refresh devices', micEnvironmentNote: 'Device names may appear only after microphone permission is granted.',
+          spectrumTitle: 'Frequency spectrum', spectrumSubtitle: 'Live low-to-mid frequency view of the microphone input', spectrumEmpty: 'Start the microphone to show the spectrum',
+          navTuner: 'Tuner', navMetro: 'Metronome', navPractice: 'Practice', buildInfo: 'Build information', appVersion: 'App version', builtAt: 'Built at', dependencies: 'Embedded dependencies', footer: 'Music Practice Kit · Local-first single HTML',
+          helpBasicsTitle: 'Basics', helpStep1: 'Press Start microphone and allow microphone access. In instrument modes, tap a string to lock the target note.', helpStep2: 'Adjust BPM with the slider or +/- buttons. Tap TAP at least three times to measure tempo from your rhythm.', helpStep3: 'Use the drone, timer, recorder, and spectrum only when you need them.',
+          helpPrivacyTitle: 'Privacy', helpPrivacyBody: 'Microphone audio, recordings, and settings are processed in this page and are not sent outside by this app. A recording leaves the page only when you explicitly save the file.',
+          helpTunerTitle: 'Tuner tips', helpTuner1: 'Use a quiet room and play one clear note at a time for steadier detection.', helpTuner2: 'High sensitivity can react to room noise. Adjust it only when notes are not detected.', helpTuner3: 'Reference A4 can be set from 430.0 to 450.0 Hz and also changes the drone pitch.',
+          helpNotesTitle: 'Notes', helpNoteMic: 'Microphone features depend on browser permission and secure-context rules. If a local HTML file cannot access the microphone, use HTTPS or localhost.', helpNoteRecording: 'The recording format is chosen from formats supported by your browser. Recording data is lost when you close the page.', helpNoteAudio: 'Metronome and drone audio played through speakers can be picked up by the tuner or recorder. Use headphones when appropriate.', helpNoteWake: 'Keep screen awake works only where supported and can still be released by the OS or browser.', helpOffline: 'Metronome, TAP, drone, and timer work without microphone permission.',
+          secureReady: 'Microphone-capable context', secureLimited: 'Microphone may be restricted', micPermissionDenied: 'Microphone permission was denied', micStartFailed: 'Could not start the microphone', micStarted: 'Microphone started', micStopped: 'Microphone stopped', deviceChanged: 'Input device changed', deviceRefreshFailed: 'Could not refresh input devices',
+          timerDoneToast: 'Practice timer finished', wakeOn: 'Screen wake lock active', wakeFailed: 'Could not keep the screen awake', tapMeasured: 'Set to {bpm} BPM from TAP',
+          droneStarted: 'Drone started', droneStopped: 'Drone stopped', metronomeStarted: 'Metronome started', metronomeStopped: 'Metronome stopped',
+          invalidReference: 'Set A4 between 430.0 and 450.0 Hz', selectMicFirst: 'Recording needs microphone access', recordFailed: 'Could not start recording', nothingToSave: 'There is no recording to save', confirmTitle: 'Confirm', confirmReplaceRecording: 'You have an unsaved recording. Replace it with a new recording?', confirmClearRecording: 'Clear the current recording?', cancel: 'Cancel', replaceRecording: 'Replace', clearRecordingAction: 'Clear'
+        }
+      };
+
+      let settings = loadSettings();
+      let language = settings.language || (navigator.language && navigator.language.toLowerCase().startsWith('ja') ? 'ja' : 'en');
+      settings.language = language;
+      let audioContext = null;
+      let micStream = null;
+      let micSource = null;
+      let analyser = null;
+      let micActive = false;
+      let micRaf = 0;
+      let lastPitchAt = 0;
+      let lastSpectrumAt = 0;
+      let smoothedFrequency = 0;
+      let lockedStringMidi = null;
+      let timeBuffer = new Float32Array(4096);
+      let freqBuffer = new Uint8Array(2048);
+      let meterRms = 0;
+
+      let metroRunning = false;
+      let schedulerTimer = 0;
+      let nextClickTime = 0;
+      let currentBeat = 0;
+      let metroVisualTimers = new Set();
+      let tapTimes = [];
+
+      let droneOscillator = null;
+      let droneGain = null;
+
+      let timerTotal = settings.timerMinutes * 60;
+      let timerRemaining = timerTotal;
+      let timerRunning = false;
+      let timerStartedAt = 0;
+      let timerBaseRemaining = timerRemaining;
+      let timerInterval = 0;
+      let wakeLockSentinel = null;
+
+      let mediaRecorder = null;
+      let recordingChunks = [];
+      let recordingStartedAt = 0;
+      let recordingInterval = 0;
+      let recordingBlob = null;
+      let recordingUrl = '';
+      let recordingMime = '';
+      let recordingDownloaded = false;
+
+      let toastTimer = 0;
+
+      function loadSettings() {
+        try { return { ...defaultSettings, ...(JSON.parse(localStorage.getItem(storageKey) || '{}')) }; }
+        catch { return { ...defaultSettings }; }
+      }
+      function saveSettings() {
+        try { localStorage.setItem(storageKey, JSON.stringify(settings)); } catch { /* storage may be unavailable */ }
+      }
+      function t(key, values = {}) {
+        let text = translations[language]?.[key] ?? translations.ja[key] ?? key;
+        Object.entries(values).forEach(([name, value]) => { text = text.replaceAll(`{${name}}`, String(value)); });
+        return text;
+      }
+      function applyLanguage() {
+        document.documentElement.lang = language;
+        $$('[data-i18n]').forEach(el => { const value = t(el.dataset.i18n); if (el.tagName === 'OPTION') el.textContent = value; else el.textContent = value; });
+        $$('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+        $$('[data-i18n-aria-label]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAriaLabel)); });
+        $('#languageButton').textContent = language === 'ja' ? 'EN' : 'JA';
+        updateMicUi(); updateMetronomeUi(); updateDroneUi(); updateTimerUi(); updateRecordUi(); updateSecureBadge();
+      }
+      function showToast(message) {
+        const toast = $('#toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2600);
+        $('#liveStatus').textContent = message;
+      }
+      function formatTime(seconds) {
+        const safe = Math.max(0, Math.ceil(seconds));
+        const m = Math.floor(safe / 60); const s = safe % 60;
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+      function midiToFrequency(midi) { return settings.referencePitch * Math.pow(2, (midi - 69) / 12); }
+      function midiToLabel(midi) { const rounded = Math.round(midi); return `${noteNames[(rounded % 12 + 12) % 12]}${Math.floor(rounded / 12) - 1}`; }
+      function splitNoteLabel(label) {
+        const match = /^([A-G])([♯#]?)(-?\d+)$/.exec(label);
+        return match ? { main: match[1], accidental: match[2].replace('#', '♯'), octave: match[3] } : { main: label, accidental: '', octave: '' };
+      }
+      function tempoNameFor(bpm) {
+        if (bpm < 40) return 'Grave'; if (bpm < 60) return 'Largo'; if (bpm < 76) return 'Adagio'; if (bpm < 108) return 'Andante'; if (bpm < 120) return 'Moderato'; if (bpm < 156) return 'Allegro'; if (bpm < 176) return 'Vivace'; if (bpm < 200) return 'Presto'; return 'Prestissimo';
+      }
+      function ensureAudioContext() {
+        if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+        if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+        return audioContext;
+      }
+
+      function updateSecureBadge() {
+        const badge = $('#secureBadge');
+        const supported = Boolean(navigator.mediaDevices?.getUserMedia);
+        const likelyReady = supported && window.isSecureContext;
+        badge.classList.toggle('good', likelyReady);
+        badge.classList.toggle('warn', !likelyReady);
+        $('#secureBadgeText').textContent = t(likelyReady ? 'secureReady' : 'secureLimited');
+        $('#mediaSupportPill').textContent = supported ? 'Web Audio · Mic' : 'Web Audio only';
+      }
+
+      function initTunerModes() {
+        $$('#tunerModes .segment').forEach(button => {
+          button.classList.toggle('active', button.dataset.mode === settings.tunerMode);
+          button.addEventListener('click', () => {
+            settings.tunerMode = button.dataset.mode;
+            lockedStringMidi = null;
+            saveSettings();
+            $$('#tunerModes .segment').forEach(item => item.classList.toggle('active', item === button));
+            renderStringChips();
+            smoothedFrequency = 0;
+          });
+        });
+        renderStringChips();
+      }
+      function renderStringChips() {
+        const wrap = $('#stringChips');
+        const hint = $('#stringHint');
+        const strings = instruments[settings.tunerMode] || [];
+        wrap.replaceChildren();
+        wrap.hidden = strings.length === 0;
+        hint.hidden = strings.length === 0;
+        strings.forEach(string => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'chip';
+          button.dataset.midi = String(string.midi);
+          button.textContent = `${string.name} · ${midiToFrequency(string.midi).toFixed(1)}`;
+          if (lockedStringMidi === string.midi) button.classList.add('active', 'locked');
+          button.addEventListener('click', () => {
+            lockedStringMidi = lockedStringMidi === string.midi ? null : string.midi;
+            renderStringChips();
+          });
+          wrap.append(button);
+        });
+      }
+
+      async function startMicrophone(deviceId = '') {
+        if (!navigator.mediaDevices?.getUserMedia) {
+          updateMicUi('error'); showToast(t('micStartFailed')); return false;
+        }
+        if (mediaRecorder && mediaRecorder.state === 'recording') return true;
+        await stopMicrophone(false);
+        try {
+          const constraints = {
+            audio: {
+              echoCancellation: false,
+              noiseSuppression: false,
+              autoGainControl: false,
+              channelCount: 1,
+              ...(deviceId ? { deviceId: { exact: deviceId } } : {})
+            }
+          };
+          micStream = await navigator.mediaDevices.getUserMedia(constraints);
+          const ctx = ensureAudioContext();
+          micSource = ctx.createMediaStreamSource(micStream);
+          analyser = ctx.createAnalyser();
+          analyser.fftSize = 4096;
+          analyser.smoothingTimeConstant = 0.18;
+          analyser.minDecibels = -92;
+          analyser.maxDecibels = -24;
+          timeBuffer = new Float32Array(analyser.fftSize);
+          freqBuffer = new Uint8Array(analyser.frequencyBinCount);
+          // Intentionally no analyser.connect(ctx.destination): microphone input must remain silent.
+          micSource.connect(analyser);
+          micActive = true;
+          smoothedFrequency = 0;
+          updateMicUi();
+          await refreshAudioDevices(true);
+          startMicLoop();
+          showToast(t('micStarted'));
+          return true;
+        } catch (error) {
+          const denied = error && (error.name === 'NotAllowedError' || error.name === 'SecurityError');
+          updateMicUi('error');
+          showToast(t(denied ? 'micPermissionDenied' : 'micStartFailed'));
+          return false;
+        }
+      }
+      async function stopMicrophone(showMessage = true) {
+        if (mediaRecorder && mediaRecorder.state === 'recording') return false;
+        cancelAnimationFrame(micRaf); micRaf = 0;
+        if (micSource) { try { micSource.disconnect(); } catch {} micSource = null; }
+        if (micStream) { micStream.getTracks().forEach(track => track.stop()); micStream = null; }
+        analyser = null; micActive = false; meterRms = 0; smoothedFrequency = 0;
+        updateMicUi(); resetTunerDisplay(); clearSpectrum();
+        if (showMessage) showToast(t('micStopped'));
+        return true;
+      }
+      function updateMicUi(forced = '') {
+        const pill = $('#micStatusPill');
+        const statusKey = forced === 'error' ? 'micError' : micActive ? 'micOn' : 'micOff';
+        pill.classList.toggle('active', micActive);
+        $('#micStatusText').textContent = t(statusKey);
+        $('#micButtonText').textContent = t(micActive ? 'stopMic' : 'startMic'); $('#micButton').setAttribute('aria-pressed', String(micActive));
+        $('#micButton').classList.toggle('soft', micActive);
+        $('#micButton').classList.toggle('primary', !micActive);
+        $('#audioDevice').disabled = !micActive || mediaRecorder?.state === 'recording';
+        $('#spectrumEmpty').hidden = micActive;
+      }
+      function startMicLoop() {
+        cancelAnimationFrame(micRaf);
+        const loop = now => {
+          if (!micActive || !analyser) return;
+          if (document.visibilityState !== 'hidden') {
+            analyser.getFloatTimeDomainData(timeBuffer);
+            meterRms = calculateRms(timeBuffer);
+            updateLevelMeter(meterRms);
+            if (now - lastPitchAt > 90) { lastPitchAt = now; processPitchFrame(timeBuffer); }
+            if (now - lastSpectrumAt > 42) { lastSpectrumAt = now; drawSpectrum(); }
+          }
+          micRaf = requestAnimationFrame(loop);
+        };
+        micRaf = requestAnimationFrame(loop);
+      }
+      function calculateRms(buffer) {
+        let sum = 0;
+        for (let i = 0; i < buffer.length; i += 1) sum += buffer[i] * buffer[i];
+        return Math.sqrt(sum / buffer.length);
+      }
+      function updateLevelMeter(rms) {
+        const percent = clamp((rms / 0.18) * 100, 0, 100);
+        $('#levelFill').style.width = `${percent}%`;
+        $('#levelValue').textContent = `${Math.round(percent)}%`;
+      }
+
+      // Difference-function pitch detection inspired by YIN. It is throttled to ~11 Hz to keep mobile CPU use reasonable.
+      function detectPitchYin(buffer, sampleRate) {
+        const rms = calculateRms(buffer);
+        if (rms < settings.noiseGate) return { frequency: 0, confidence: 0, rms };
+        const minFreq = 38;
+        const maxFreq = 1400;
+        const tauMin = Math.max(2, Math.floor(sampleRate / maxFreq));
+        const tauMax = Math.min(Math.floor(sampleRate / minFreq), Math.floor(buffer.length / 2));
+        const windowSize = Math.min(2048, buffer.length - tauMax);
+        const diff = new Float32Array(tauMax + 1);
+        let running = 0;
+        let bestTau = 0;
+        let bestValue = Infinity;
+        for (let tau = 1; tau <= tauMax; tau += 1) {
+          let sum = 0;
+          for (let i = 0; i < windowSize; i += 1) {
+            const delta = buffer[i] - buffer[i + tau];
+            sum += delta * delta;
+          }
+          diff[tau] = sum;
+        }
+        for (let tau = 1; tau <= tauMax; tau += 1) {
+          running += diff[tau];
+          const cmnd = running > 0 ? diff[tau] * tau / running : 1;
+          diff[tau] = cmnd;
+          if (tau >= tauMin && cmnd < bestValue) { bestValue = cmnd; bestTau = tau; }
+        }
+        let tau = 0;
+        for (let i = tauMin; i <= tauMax; i += 1) {
+          if (diff[i] < 0.18) {
+            while (i + 1 <= tauMax && diff[i + 1] < diff[i]) i += 1;
+            tau = i;
+            break;
+          }
+        }
+        if (!tau) tau = bestValue < 0.28 ? bestTau : 0;
+        if (!tau) return { frequency: 0, confidence: 0, rms };
+        let betterTau = tau;
+        if (tau > 1 && tau < tauMax) {
+          const s0 = diff[tau - 1], s1 = diff[tau], s2 = diff[tau + 1];
+          const denom = 2 * (2 * s1 - s2 - s0);
+          if (Math.abs(denom) > 1e-9) betterTau += (s2 - s0) / denom;
+        }
+        const frequency = sampleRate / betterTau;
+        return { frequency: frequency >= minFreq && frequency <= maxFreq ? frequency : 0, confidence: clamp(1 - diff[tau], 0, 1), rms };
+      }
+      function chooseTargetMidi(frequency) {
+        if (lockedStringMidi !== null) return lockedStringMidi;
+        if (settings.tunerMode === 'chromatic') return Math.round(69 + 12 * Math.log2(frequency / settings.referencePitch));
+        const strings = instruments[settings.tunerMode] || [];
+        let nearest = strings[0]?.midi ?? 69;
+        let bestCents = Infinity;
+        strings.forEach(string => {
+          const cents = Math.abs(1200 * Math.log2(frequency / midiToFrequency(string.midi)));
+          if (cents < bestCents) { bestCents = cents; nearest = string.midi; }
+        });
+        return nearest;
+      }
+      function processPitchFrame(buffer) {
+        if (!audioContext) return;
+        if (meterRms < settings.noiseGate) {
+          $('#tunerState').textContent = t(meterRms > settings.noiseGate * 0.45 ? 'tunerLowSignal' : 'tunerListening');
+          return;
+        }
+        const result = detectPitchYin(buffer, audioContext.sampleRate);
+        if (!result.frequency || result.confidence < 0.66) { $('#tunerState').textContent = t('tunerListening'); return; }
+        smoothedFrequency = smoothedFrequency ? smoothedFrequency * 0.72 + result.frequency * 0.28 : result.frequency;
+        const targetMidi = chooseTargetMidi(smoothedFrequency);
+        const targetFreq = midiToFrequency(targetMidi);
+        const cents = 1200 * Math.log2(smoothedFrequency / targetFreq);
+        const label = midiToLabel(targetMidi);
+        const parts = splitNoteLabel(label);
+        $('#noteMain').textContent = parts.main; $('#noteAccidental').textContent = parts.accidental; $('#noteOctave').textContent = parts.octave;
+        $('#frequencyValue').textContent = smoothedFrequency.toFixed(1);
+        $('#targetFrequency').textContent = `${targetFreq.toFixed(1)} Hz`;
+        const visibleCents = clamp(cents, -99.9, 99.9);
+        $('#centsValue').textContent = `${visibleCents >= 0 ? '+' : ''}${visibleCents.toFixed(1)} ¢`;
+        const inTune = Math.abs(cents) <= 5;
+        const needle = $('#needle');
+        needle.style.transform = `translateX(-50%) rotate(${clamp(cents, -50, 50) * 0.82}deg)`;
+        needle.classList.toggle('in-tune', inTune);
+        $('#pitchDirection').textContent = t(inTune ? 'pitchInTune' : cents < 0 ? 'pitchFlat' : 'pitchSharp');
+        $('#tunerState').textContent = t('tunerDetected');
+        highlightNearestString(targetMidi);
+      }
+      function highlightNearestString(midi) {
+        $$('#stringChips .chip').forEach(chip => {
+          const chipMidi = Number(chip.dataset.midi);
+          chip.classList.toggle('active', chipMidi === midi || chipMidi === lockedStringMidi);
+          chip.classList.toggle('locked', chipMidi === lockedStringMidi);
+        });
+      }
+      function resetTunerDisplay() {
+        const targetMidi = lockedStringMidi ?? 69;
+        const parts = splitNoteLabel(midiToLabel(targetMidi));
+        $('#noteMain').textContent = parts.main; $('#noteAccidental').textContent = parts.accidental; $('#noteOctave').textContent = parts.octave;
+        $('#frequencyValue').textContent = settings.referencePitch.toFixed(1);
+        $('#targetFrequency').textContent = `${midiToFrequency(targetMidi).toFixed(1)} Hz`;
+        $('#centsValue').textContent = '0.0 ¢'; $('#pitchDirection').textContent = t('pitchWaiting'); $('#tunerState').textContent = t('tunerWaiting');
+        $('#needle').style.transform = 'translateX(-50%) rotate(0deg)'; $('#needle').classList.remove('in-tune');
+        updateLevelMeter(0);
+      }
+      async function refreshAudioDevices(silent = false) {
+        if (!navigator.mediaDevices?.enumerateDevices) return;
+        try {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          const inputs = devices.filter(device => device.kind === 'audioinput');
+          const select = $('#audioDevice');
+          const currentTrack = micStream?.getAudioTracks()[0];
+          const currentId = currentTrack?.getSettings?.().deviceId || select.value;
+          select.replaceChildren();
+          const defaultOption = document.createElement('option'); defaultOption.value = ''; defaultOption.textContent = t('defaultDevice'); select.append(defaultOption);
+          inputs.forEach((device, index) => { const option = document.createElement('option'); option.value = device.deviceId; option.textContent = device.label || `${t('inputDevice')} ${index + 1}`; select.append(option); });
+          if (currentId && inputs.some(device => device.deviceId === currentId)) select.value = currentId;
+          select.disabled = !micActive || inputs.length <= 1;
+        } catch { if (!silent) showToast(t('deviceRefreshFailed')); }
+      }
+
+      function setBpm(value, persist = true) {
+        settings.bpm = clamp(Math.round(Number(value) || 120), 30, 300);
+        $('#bpmNumber').textContent = settings.bpm;
+        $('#bpmSlider').value = settings.bpm;
+        $('#tempoName').textContent = tempoNameFor(settings.bpm);
+        if (persist) saveSettings();
+      }
+      function renderBeatDots() {
+        const wrap = $('#beatDots'); wrap.replaceChildren();
+        for (let i = 0; i < settings.beatsPerBar; i += 1) { const dot = document.createElement('span'); dot.className = `beat-dot${i === 0 ? ' accent' : ''}`; wrap.append(dot); }
+      }
+      function scheduleClick(time, beatIndex) {
+        const ctx = ensureAudioContext();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const accent = settings.accent && beatIndex === 0;
+        oscillator.type = 'square'; oscillator.frequency.setValueAtTime(accent ? 1450 : 980, time);
+        const volume = settings.metroVolume * (accent ? 0.42 : 0.30);
+        gain.gain.setValueAtTime(0.0001, time); gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, volume), time + 0.002); gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.035);
+        oscillator.connect(gain); gain.connect(ctx.destination); oscillator.start(time); oscillator.stop(time + 0.045);
+        const delay = Math.max(0, (time - ctx.currentTime) * 1000);
+        const timer = window.setTimeout(() => {
+          metroVisualTimers.delete(timer);
+          const dots = $$('#beatDots .beat-dot'); dots.forEach((dot, index) => dot.classList.toggle('active', index === beatIndex));
+          window.setTimeout(() => dots[beatIndex]?.classList.remove('active'), 90);
+        }, delay);
+        metroVisualTimers.add(timer);
+      }
+      function metroScheduler() {
+        if (!metroRunning || !audioContext) return;
+        const secondsPerBeat = 60 / settings.bpm;
+        while (nextClickTime < audioContext.currentTime + 0.11) {
+          scheduleClick(nextClickTime, currentBeat);
+          nextClickTime += secondsPerBeat;
+          currentBeat = (currentBeat + 1) % settings.beatsPerBar;
+        }
+      }
+      function startMetronome() {
+        if (metroRunning) return;
+        const ctx = ensureAudioContext();
+        metroRunning = true; currentBeat = 0; nextClickTime = ctx.currentTime + 0.06;
+        metroScheduler(); schedulerTimer = window.setInterval(metroScheduler, 25); updateMetronomeUi(); showToast(t('metronomeStarted'));
+      }
+      function stopMetronome(showMessage = true) {
+        metroRunning = false; clearInterval(schedulerTimer); schedulerTimer = 0;
+        metroVisualTimers.forEach(id => clearTimeout(id)); metroVisualTimers.clear();
+        $$('#beatDots .beat-dot').forEach(dot => dot.classList.remove('active'));
+        updateMetronomeUi(); if (showMessage) showToast(t('metronomeStopped'));
+      }
+      function updateMetronomeUi() {
+        $('#metroStatusPill').classList.toggle('active', metroRunning); $('#metroStatusText').textContent = t(metroRunning ? 'running' : 'stopped');
+        $('#metroPlayButton').setAttribute('aria-label', t(metroRunning ? 'stopMetronome' : 'startMetronome')); $('#metroPlayButton').setAttribute('aria-pressed', String(metroRunning));
+        $('#metroPlayIcon').innerHTML = metroRunning ? '<path d="M8 7h3v10H8zM13 7h3v10h-3z"/>' : '<path d="m9 7 8 5-8 5z"/>';
+      }
+      function handleTap() {
+        const now = performance.now();
+        if (!tapTimes.length || now - tapTimes[tapTimes.length - 1] > 2000) tapTimes = [];
+        tapTimes.push(now); if (tapTimes.length > 8) tapTimes.shift();
+        if (tapTimes.length >= 3) {
+          let sum = 0; for (let i = 1; i < tapTimes.length; i += 1) sum += tapTimes[i] - tapTimes[i - 1];
+          const bpm = clamp(Math.round(60000 / (sum / (tapTimes.length - 1))), 30, 300);
+          setBpm(bpm); $('#tapHelp').textContent = `${tapTimes.length} taps · ${bpm} BPM`; showToast(t('tapMeasured', { bpm }));
+        } else $('#tapHelp').textContent = `${tapTimes.length} / 3`;
+      }
+
+      function buildDroneOptions() {
+        const select = $('#droneNote'); select.replaceChildren();
+        for (let midi = 36; midi <= 83; midi += 1) { const option = document.createElement('option'); option.value = String(midi); option.textContent = midiToLabel(midi); select.append(option); }
+        select.value = String(settings.droneMidi);
+        updateDroneFrequencyPill();
+      }
+      function updateDroneFrequencyPill() { $('#droneFrequencyPill').textContent = `${midiToLabel(settings.droneMidi)} · ${midiToFrequency(settings.droneMidi).toFixed(1)} Hz`; }
+      function startDrone() {
+        if (droneOscillator) return;
+        const ctx = ensureAudioContext();
+        droneOscillator = ctx.createOscillator(); droneGain = ctx.createGain();
+        droneOscillator.type = settings.droneWave; droneOscillator.frequency.setValueAtTime(midiToFrequency(settings.droneMidi), ctx.currentTime);
+        droneGain.gain.setValueAtTime(0.0001, ctx.currentTime); droneGain.gain.exponentialRampToValueAtTime(Math.max(0.0002, settings.droneVolume), ctx.currentTime + 0.05);
+        droneOscillator.connect(droneGain); droneGain.connect(ctx.destination); droneOscillator.start(); updateDroneUi(); showToast(t('droneStarted'));
+      }
+      function stopDrone(showMessage = true) {
+        if (!droneOscillator || !audioContext) return;
+        const osc = droneOscillator, gain = droneGain; droneOscillator = null; droneGain = null;
+        try { gain.gain.cancelScheduledValues(audioContext.currentTime); gain.gain.setTargetAtTime(0.0001, audioContext.currentTime, 0.02); osc.stop(audioContext.currentTime + 0.12); } catch {}
+        updateDroneUi(); if (showMessage) showToast(t('droneStopped'));
+      }
+      function updateDroneNode() {
+        if (!droneOscillator || !audioContext) return;
+        droneOscillator.type = settings.droneWave;
+        droneOscillator.frequency.setTargetAtTime(midiToFrequency(settings.droneMidi), audioContext.currentTime, 0.025);
+        droneGain.gain.setTargetAtTime(Math.max(0.0001, settings.droneVolume), audioContext.currentTime, 0.025);
+      }
+      function updateDroneUi() { $('#droneButtonText').textContent = t(droneOscillator ? 'stopDrone' : 'startDrone'); $('#droneButton').setAttribute('aria-pressed', String(Boolean(droneOscillator))); $('#droneButton').classList.toggle('soft', Boolean(droneOscillator)); $('#droneButton').classList.toggle('primary', !droneOscillator); updateDroneFrequencyPill(); }
+
+      function setTimerMinutes(minutes) {
+        const value = clamp(Math.round(Number(minutes) || 10), 1, 180);
+        settings.timerMinutes = value; saveSettings();
+        timerTotal = value * 60; timerRemaining = timerTotal; timerBaseRemaining = timerRemaining; timerRunning = false;
+        clearInterval(timerInterval); timerInterval = 0; $('#customMinutes').value = value;
+        $$('#timerPresets .chip').forEach(chip => chip.classList.toggle('active', Number(chip.dataset.minutes) === value));
+        updateTimerUi();
+      }
+      function startTimer() {
+        if (timerRunning) { pauseTimer(); return; }
+        if (timerRemaining <= 0) { timerRemaining = timerTotal; timerBaseRemaining = timerRemaining; }
+        timerRunning = true; timerStartedAt = performance.now(); timerBaseRemaining = timerRemaining;
+        clearInterval(timerInterval); timerInterval = window.setInterval(tickTimer, 200); tickTimer(); updateTimerUi();
+        if (settings.keepAwake) requestWakeLock();
+      }
+      function pauseTimer() {
+        tickTimer(); timerRunning = false; clearInterval(timerInterval); timerInterval = 0; timerBaseRemaining = timerRemaining; updateTimerUi();
+      }
+      function resetTimer() { timerRunning = false; clearInterval(timerInterval); timerInterval = 0; timerRemaining = timerTotal; timerBaseRemaining = timerRemaining; releaseWakeLock(); updateTimerUi(); }
+      function tickTimer() {
+        if (!timerRunning) return;
+        const elapsed = (performance.now() - timerStartedAt) / 1000;
+        timerRemaining = Math.max(0, timerBaseRemaining - elapsed);
+        if (timerRemaining <= 0.02) {
+          timerRemaining = 0; timerRunning = false; clearInterval(timerInterval); timerInterval = 0; releaseWakeLock(); updateTimerUi(); playTimerChime(); showToast(t('timerDoneToast')); return;
+        }
+        updateTimerUi();
+      }
+      function updateTimerUi() {
+        $('#timerDisplay').textContent = formatTime(timerRemaining);
+        const ratio = timerTotal > 0 ? clamp(timerRemaining / timerTotal, 0, 1) : 0;
+        $('#timerProgress').style.strokeDashoffset = String(301.59 * (1 - ratio)); $('#timerPercent').textContent = `${Math.round(ratio * 100)}%`;
+        const key = timerRemaining <= 0 ? 'timerFinished' : timerRunning ? 'timerRunning' : timerRemaining < timerTotal ? 'timerPaused' : 'timerReady';
+        $('#timerStatusText').textContent = t(key); $('#timerStartButton').textContent = t(timerRunning ? 'pause' : timerRemaining < timerTotal && timerRemaining > 0 ? 'resume' : 'start');
+      }
+      function playTimerChime() {
+        const ctx = ensureAudioContext(); const base = ctx.currentTime + 0.04;
+        [0, .18, .36].forEach((offset, index) => {
+          const osc = ctx.createOscillator(), gain = ctx.createGain(); osc.type = 'sine'; osc.frequency.value = index === 2 ? 880 : 660;
+          gain.gain.setValueAtTime(0.0001, base + offset); gain.gain.exponentialRampToValueAtTime(0.13, base + offset + .01); gain.gain.exponentialRampToValueAtTime(0.0001, base + offset + .15);
+          osc.connect(gain); gain.connect(ctx.destination); osc.start(base + offset); osc.stop(base + offset + .18);
+        });
+      }
+      async function requestWakeLock() {
+        if (!settings.keepAwake || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+        try { if (wakeLockSentinel && !wakeLockSentinel.released) return; wakeLockSentinel = await navigator.wakeLock.request('screen'); wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; }); $('#wakeSupportText').textContent = t('wakeOn'); }
+        catch { $('#wakeSupportText').textContent = t('wakeFailed'); }
+      }
+      async function releaseWakeLock() { if (wakeLockSentinel) { try { await wakeLockSentinel.release(); } catch {} wakeLockSentinel = null; } $('#wakeSupportText').textContent = 'wakeLock' in navigator ? t('wakeAuto') : t('wakeUnsupported'); }
+
+      function askConfirm(messageKey, okKey) {
+        return new Promise(resolve => {
+          const dialog = $('#confirmDialog');
+          $('#confirmTitle').textContent = t('confirmTitle');
+          $('#confirmMessage').textContent = t(messageKey);
+          $('#confirmCancel').textContent = t('cancel');
+          $('#confirmOk').textContent = t(okKey);
+          let settled = false;
+          const finish = value => {
+            if (settled) return;
+            settled = true;
+            dialog.removeEventListener('close', onClose);
+            if (dialog.open) dialog.close();
+            resolve(value);
+          };
+          const onClose = () => finish(false);
+          dialog.addEventListener('close', onClose, { once: true });
+          $('#confirmCancel').onclick = () => finish(false);
+          $('#confirmClose').onclick = () => finish(false);
+          $('#confirmOk').onclick = () => finish(true);
+          dialog.onclick = event => { if (event.target === dialog) finish(false); };
+          dialog.showModal();
+          $('#confirmCancel').focus();
+        });
+      }
+
+      function chooseRecordingMime() {
+        if (!window.MediaRecorder) return '';
+        const candidates = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/ogg;codecs=opus'];
+        return candidates.find(type => MediaRecorder.isTypeSupported?.(type)) || '';
+      }
+      function mimeExtension(mime) { if (mime.includes('mp4')) return 'm4a'; if (mime.includes('ogg')) return 'ogg'; if (mime.includes('webm')) return 'webm'; return 'audio'; }
+      async function startRecording() {
+        if (!window.MediaRecorder) { showToast(t('recordingUnsupported')); return; }
+        if (!micActive) { const started = await startMicrophone($('#audioDevice').value); if (!started) { showToast(t('selectMicFirst')); return; } }
+        if (!micStream) return;
+        if (recordingBlob && !recordingDownloaded) {
+          const replace = await askConfirm('confirmReplaceRecording', 'replaceRecording');
+          if (!replace) return;
+        }
+        clearExistingRecording(false);
+        recordingChunks = []; recordingMime = chooseRecordingMime();
+        try {
+          mediaRecorder = recordingMime ? new MediaRecorder(micStream, { mimeType: recordingMime }) : new MediaRecorder(micStream);
+          mediaRecorder.addEventListener('dataavailable', event => { if (event.data && event.data.size) recordingChunks.push(event.data); });
+          mediaRecorder.addEventListener('stop', finalizeRecording, { once: true });
+          mediaRecorder.start(250); recordingStartedAt = performance.now(); recordingDownloaded = false;
+          clearInterval(recordingInterval); recordingInterval = window.setInterval(updateRecordClock, 200); updateRecordUi();
+        } catch { mediaRecorder = null; showToast(t('recordFailed')); }
+      }
+      function stopRecording() { if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop(); clearInterval(recordingInterval); recordingInterval = 0; }
+      function finalizeRecording() {
+        const mime = mediaRecorder?.mimeType || recordingMime || 'audio/webm';
+        recordingBlob = new Blob(recordingChunks, { type: mime }); recordingMime = mime;
+        if (recordingUrl) URL.revokeObjectURL(recordingUrl); recordingUrl = URL.createObjectURL(recordingBlob);
+        $('#recordAudio').src = recordingUrl; $('#recordPlayback').hidden = false;
+        const seconds = Math.max(0, (performance.now() - recordingStartedAt) / 1000);
+        $('#recordMeta').textContent = `${mime || 'audio'} · ${(recordingBlob.size / 1024).toFixed(1)} KB · ${formatTime(seconds)}`;
+        mediaRecorder = null; updateRecordUi();
+      }
+      function updateRecordClock() { if (mediaRecorder?.state === 'recording') $('#recordClock').textContent = formatTime((performance.now() - recordingStartedAt) / 1000); }
+      function updateRecordUi() {
+        const active = mediaRecorder?.state === 'recording';
+        $('#recordButton').classList.toggle('recording', active); $('#recordButton').classList.toggle('primary', !active); $('#recordButton').setAttribute('aria-pressed', String(Boolean(active)));
+        $('#recordButtonText').textContent = t(active ? 'stopRecording' : 'startRecording'); $('#recordDetail').textContent = t(active ? 'recording' : 'recordReady');
+        $('#audioDevice').disabled = active || !micActive; $('#refreshDevices').disabled = active; $('#micButton').disabled = active;
+        if (!active && !recordingBlob) $('#recordClock').textContent = '00:00';
+      }
+      function clearExistingRecording(showMessage = true) {
+        if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+        recordingUrl = ''; recordingBlob = null; recordingChunks = []; recordingDownloaded = false; $('#recordAudio').removeAttribute('src'); $('#recordPlayback').hidden = true; $('#recordClock').textContent = '00:00';
+        if (showMessage) showToast(t('recordingCleared'));
+      }
+      async function requestClearRecording() {
+        if (!recordingBlob) return;
+        const ok = await askConfirm('confirmClearRecording', 'clearRecordingAction');
+        if (ok) clearExistingRecording(true);
+      }
+      function downloadRecording() {
+        if (!recordingBlob || !recordingUrl) { showToast(t('nothingToSave')); return; }
+        const now = new Date(); const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+        const anchor = document.createElement('a'); anchor.href = recordingUrl; anchor.download = `music-practice-${stamp}.${mimeExtension(recordingMime)}`; document.body.append(anchor); anchor.click(); anchor.remove(); recordingDownloaded = true; showToast(t('recordingSaved'));
+      }
+
+      function resizeSpectrumCanvas() {
+        const canvas = $('#spectrumCanvas'); const rect = canvas.getBoundingClientRect(); const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.max(1, Math.round(rect.width * dpr)); const height = Math.max(1, Math.round(rect.height * dpr));
+        if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
+      }
+      function clearSpectrum() {
+        const canvas = $('#spectrumCanvas'); resizeSpectrumCanvas(); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); $('#spectrumEmpty').hidden = micActive;
+      }
+      function drawSpectrum() {
+        if (!analyser || !audioContext) return;
+        resizeSpectrumCanvas(); analyser.getByteFrequencyData(freqBuffer);
+        const canvas = $('#spectrumCanvas'), ctx = canvas.getContext('2d'); const width = canvas.width, height = canvas.height;
+        const styles = getComputedStyle(document.documentElement); const accent = styles.getPropertyValue('--accent').trim() || '#16624f'; const grid = styles.getPropertyValue('--line').trim() || '#dadbd6';
+        ctx.clearRect(0, 0, width, height);
+        ctx.strokeStyle = grid; ctx.lineWidth = 1;
+        for (let i = 1; i < 4; i += 1) { const y = (height / 4) * i; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
+        const maxHz = 4000; const maxBin = Math.min(freqBuffer.length - 1, Math.floor(maxHz / (audioContext.sampleRate / analyser.fftSize)));
+        ctx.beginPath(); ctx.moveTo(0, height); ctx.lineWidth = Math.max(1.5, (window.devicePixelRatio || 1) * 1.2); ctx.strokeStyle = accent;
+        for (let bin = 0; bin <= maxBin; bin += 1) { const x = (bin / maxBin) * width; const amplitude = freqBuffer[bin] / 255; const y = height - amplitude * height * 0.92; ctx.lineTo(x, y); }
+        ctx.stroke();
+      }
+
+      function updateBuildInfo() {
+        $('#versionBadge').textContent = `v${APP_CONFIG.version || '1.0.0'}`; $('#buildVersion').textContent = APP_CONFIG.version || '—';
+        $('#builtAt').textContent = BUILD_MANIFEST.generatedAtUtc || BUILD_MANIFEST.generatedAt || '—'; $('#dependencyCount').textContent = String(BUILD_MANIFEST.dependencyCount ?? 0);
+      }
+      function initControls() {
+        $('#referencePitch').value = Number(settings.referencePitch).toFixed(1); const sensitivity = Math.round((0.08 - settings.noiseGate) / 0.076 * 100); $('#noiseGate').value = clamp(sensitivity, 0, 100); $('#noiseGateValue').textContent = `${clamp(sensitivity, 0, 100)}%`;
+        setBpm(settings.bpm, false); $('#beatsPerBar').value = String(settings.beatsPerBar); $('#accentToggle').checked = settings.accent; $('#metroVolume').value = settings.metroVolume; $('#metroVolumeValue').textContent = `${Math.round(settings.metroVolume * 100)}%`; renderBeatDots();
+        buildDroneOptions(); $('#droneWave').value = settings.droneWave; $('#droneVolume').value = settings.droneVolume; $('#droneVolumeValue').textContent = `${Math.round(settings.droneVolume / 0.35 * 100)}%`;
+        setTimerMinutes(settings.timerMinutes); $('#wakeToggle').checked = Boolean(settings.keepAwake); $('#wakeToggle').disabled = !('wakeLock' in navigator); $('#wakeSupportText').textContent = 'wakeLock' in navigator ? t('wakeAuto') : t('wakeUnsupported');
+        initTunerModes(); resetTunerDisplay(); updateBuildInfo(); updateSecureBadge(); clearSpectrum();
+      }
+
+      $('#languageButton').addEventListener('click', () => { language = language === 'ja' ? 'en' : 'ja'; settings.language = language; saveSettings(); applyLanguage(); renderStringChips(); refreshAudioDevices(true); });
+      $('#helpButton').addEventListener('click', () => $('#helpDialog').showModal()); $('#closeHelpButton').addEventListener('click', () => $('#helpDialog').close());
+      $('#helpDialog').addEventListener('click', event => { if (event.target === $('#helpDialog')) $('#helpDialog').close(); });
+      $('#micButton').addEventListener('click', () => micActive ? stopMicrophone() : startMicrophone($('#audioDevice').value));
+      $('#referencePitch').addEventListener('change', event => { const value = Number(event.target.value); if (!Number.isFinite(value) || value < 430 || value > 450) { event.target.value = Number(settings.referencePitch).toFixed(1); showToast(t('invalidReference')); return; } settings.referencePitch = Math.round(value * 10) / 10; event.target.value = settings.referencePitch.toFixed(1); saveSettings(); renderStringChips(); buildDroneOptions(); updateDroneNode(); resetTunerDisplay(); });
+      $('#noiseGate').addEventListener('input', event => { const sensitivity = clamp(Number(event.target.value), 0, 100); settings.noiseGate = 0.08 - (sensitivity / 100) * 0.076; $('#noiseGateValue').textContent = `${Math.round(sensitivity)}%`; saveSettings(); });
+      $('#audioDevice').addEventListener('change', async event => { const value = event.target.value; const ok = await startMicrophone(value); if (ok) showToast(t('deviceChanged')); });
+      $('#refreshDevices').addEventListener('click', () => refreshAudioDevices(false));
+
+      $('#metroPlayButton').addEventListener('click', () => metroRunning ? stopMetronome() : startMetronome()); $('#bpmSlider').addEventListener('input', event => setBpm(event.target.value));
+      $('#bpmMinus5').addEventListener('click', () => setBpm(settings.bpm - 5)); $('#bpmMinus1').addEventListener('click', () => setBpm(settings.bpm - 1)); $('#bpmPlus1').addEventListener('click', () => setBpm(settings.bpm + 1)); $('#bpmPlus5').addEventListener('click', () => setBpm(settings.bpm + 5));
+      $('#tapButton').addEventListener('click', handleTap); $('#beatsPerBar').addEventListener('change', event => { settings.beatsPerBar = Number(event.target.value); currentBeat = 0; saveSettings(); renderBeatDots(); });
+      $('#accentToggle').addEventListener('change', event => { settings.accent = event.target.checked; saveSettings(); }); $('#metroVolume').addEventListener('input', event => { settings.metroVolume = Number(event.target.value); $('#metroVolumeValue').textContent = `${Math.round(settings.metroVolume * 100)}%`; saveSettings(); });
+
+      $('#droneButton').addEventListener('click', () => droneOscillator ? stopDrone() : startDrone()); $('#droneNote').addEventListener('change', event => { settings.droneMidi = Number(event.target.value); saveSettings(); updateDroneNode(); updateDroneFrequencyPill(); });
+      $('#droneWave').addEventListener('change', event => { settings.droneWave = event.target.value; saveSettings(); updateDroneNode(); }); $('#droneVolume').addEventListener('input', event => { settings.droneVolume = Number(event.target.value); $('#droneVolumeValue').textContent = `${Math.round(settings.droneVolume / 0.35 * 100)}%`; saveSettings(); updateDroneNode(); });
+
+      $$('#timerPresets .chip').forEach(chip => chip.addEventListener('click', () => setTimerMinutes(chip.dataset.minutes))); $('#customMinutes').addEventListener('change', event => setTimerMinutes(event.target.value)); $('#timerStartButton').addEventListener('click', startTimer); $('#timerResetButton').addEventListener('click', resetTimer);
+      $('#wakeToggle').addEventListener('change', event => { settings.keepAwake = event.target.checked; saveSettings(); if (settings.keepAwake && timerRunning) requestWakeLock(); else releaseWakeLock(); });
+
+      $('#recordButton').addEventListener('click', () => mediaRecorder?.state === 'recording' ? stopRecording() : startRecording()); $('#downloadRecording').addEventListener('click', downloadRecording); $('#clearRecording').addEventListener('click', requestClearRecording);
+
+      $$('.bottom-nav button').forEach(button => button.addEventListener('click', () => { document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }));
+      const navObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries => { const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]; if (!visible) return; $$('.bottom-nav button').forEach(button => button.classList.toggle('active', button.dataset.target === visible.target.id)); }, { rootMargin: '-20% 0px -60% 0px', threshold: [0.1, 0.35, 0.6] }) : null;
+      if (navObserver) ['tunerSection', 'metronomeSection', 'practiceSection'].forEach(id => navObserver.observe(document.getElementById(id)));
+
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && settings.keepAwake && timerRunning) requestWakeLock(); });
+      window.addEventListener('resize', clearSpectrum, { passive: true });
+      window.addEventListener('pagehide', () => {
+        stopMetronome(false); stopDrone(false); releaseWakeLock(); clearInterval(timerInterval); clearInterval(recordingInterval); cancelAnimationFrame(micRaf);
+        if (mediaRecorder?.state === 'recording') { try { mediaRecorder.stop(); } catch {} }
+        if (micStream) micStream.getTracks().forEach(track => track.stop()); if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+        if (audioContext && audioContext.state !== 'closed') audioContext.close().catch(() => {});
+      });
+
+      initControls(); applyLanguage();
+    })();
+  </script>
+</body>
+</html>
