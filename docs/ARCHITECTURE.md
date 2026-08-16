@@ -1,0 +1,40 @@
+# Architecture
+
+The repository follows the Single HTML App Template model:
+
+```text
+app.config.json
+APP_SPEC.md
+dependencies.json
+src/index.template.html
+build-standalone.ps1
+scripts/check-repository.ps1
+scripts/verify-standalone.ps1
+dist/index.html
+dist/index.self-extract.html
+```
+
+## Runtime modules inside the single HTML
+
+- App shell / localization / localStorage preferences.
+- Audio context manager shared by metronome and drone.
+- Microphone manager shared by tuner, spectrum, and recorder.
+- YIN-style pitch estimator throttled on the animation loop.
+- Metronome scheduler based on Web Audio clock look-ahead scheduling.
+- Drone oscillator manager.
+- Drift-corrected practice timer.
+- MediaRecorder wrapper and object-URL lifecycle.
+- Canvas spectrum renderer.
+- Optional Screen Wake Lock manager.
+
+The microphone `MediaStreamAudioSourceNode` connects only to an `AnalyserNode`; it is never connected to the destination.
+
+## Build placeholders
+
+`src/index.template.html` contains exactly one of:
+
+- `__APP_CONFIG_JSON__`
+- `__BUILD_MANIFEST_JSON__`
+- `__EMBEDDED_ASSET_BUNDLE_BASE64__`
+
+The app currently has no third-party assets, so the embedded asset bundle is empty while preserving template compatibility.

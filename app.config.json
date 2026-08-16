@@ -1,0 +1,10 @@
+{
+  "$schema": "./schemas/app-config.schema.json",
+  "name": "Music Practice Kit",
+  "slug": "music-practice-kit",
+  "version": "1.0.0",
+  "description": "A local-first tuner, metronome, drone, timer, recorder, and spectrum toolkit for instrument practice.",
+  "author": "ttomohisa",
+  "license": "MIT",
+  "languages": ["ja", "en"]
+}
