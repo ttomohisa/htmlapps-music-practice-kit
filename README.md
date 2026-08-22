@@ -18,6 +18,8 @@ Built as part of [Browser Kitty](https://browser-kitty.com/).
 
 GitHub Pages only serves the initial HTML. After the page loads, tuning analysis, metronome scheduling, drone generation, recording, spectrum analysis, and settings are handled on your device.
 
+![Music Practice Kit with the metronome and practice timer running](assets/screenshot.png)
+
 The tuner, recorder, and spectrum require microphone permission. The metronome, TAP BPM, drone, and timer can be used without microphone access.
 
 ## Features
