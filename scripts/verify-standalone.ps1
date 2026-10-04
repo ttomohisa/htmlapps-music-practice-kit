@@ -17,4 +17,6 @@ $badPatterns = @(
 )
 foreach ($pattern in $badPatterns) { if ($html -match $pattern) { Write-Error "External runtime reference found: $pattern"; exit 1 } }
 if ((Get-Item $HtmlPath).Length -lt 20000) { Write-Error 'Generated HTML is unexpectedly small.'; exit 1 }
+& node --test (Join-Path $Root 'tests/standalone.test.cjs')
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host 'Standalone verification passed.'

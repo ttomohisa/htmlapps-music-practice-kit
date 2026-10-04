@@ -86,6 +86,14 @@ This app currently has no third-party runtime dependency, so the build does not 
 3. Choose 2–7 beats per bar and enable or disable the first-beat accent.
 4. Press Start. You can keep the metronome running while moving to the other practice tools.
 
+### Gradually increase tempo
+
+Enable **Gradually increase tempo** below the metronome, then press Start. The default is **60 → 100 BPM, +5 every 4 bars**. Change the start/target (30–300 BPM), increase (1–270 BPM), and interval (1–64 complete bars) while stopped. The target must be at least the start BPM.
+
+The BPM changes only at the next bar start and holds when it reaches the target. The display shows the audible BPM and bars until the next change. Stop/restart begins at the start BPM; the slider, ± buttons, or the first TAP return to normal mode. Toggling the option while playing restarts the metronome in the selected mode. Settings are saved locally, but playback never starts on page load.
+
+Hiding the page or interrupted audio pauses metronome playback. Returning repeats the interrupted bar at the same tempo, without a burst of catch-up clicks. No microphone permission is required.
+
 ### Drone
 
 1. Open the practice tools and choose a note from C2 to B5.
@@ -225,3 +233,7 @@ Bug reports and feature proposals are welcome through GitHub Issues. See [CONTRI
 Copyright © 2026 ttomohisa
 
 Licensed under the [MIT License](LICENSE).
+
+### Automated regression tests
+
+Node.js 18+ is required for the dependency-free tests. Run `node --test` after building. Repository checks run the metronome/controller tests; standalone verification checks generated JavaScript, translations, offline constraints, the gzip payload, and the root Browser Kitty alias.
