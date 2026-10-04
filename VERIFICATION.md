@@ -26,7 +26,7 @@ Reason: the available Chromium installation is controlled by an administrator po
 
 Verified in the cloud build environment (Node + official PowerShell):
 
-- 31 automated tests pass: deterministic inline-runtime timing/controller tests and standalone artifact checks.
+- 32 automated tests pass: deterministic inline-runtime timing/controller tests and standalone artifact checks.
 - Covers all 2–7 beat meters, 30–300 BPM extremes, 1/64-bar intervals, non-divisible target clamping, target hold, UI countdown, repeated start, stop/restart, manual/slider/stepper/TAP exits, queued-boundary cancellation, hidden-page and AudioContext interruption, invalid persisted/input values, and JA/EN initialization without autoplay.
 - Manual accent/meter changes, independent drone lifetime, and synthetic tuner pitch detection regressions pass.
 - Repository checks and standalone build/verification pass. For the Linux build, a temporary `powershell.exe` command alias points to the installed official `pwsh`, because the build script invokes the Windows command name.

@@ -869,7 +869,7 @@
       'use strict';
 
       const APP_CONFIG = {"$schema":"./schemas/app-config.schema.json","name":"Music Practice Kit","slug":"music-practice-kit","version":"1.0.0","description":"A local-first tuner, metronome, drone, timer, recorder, and spectrum toolkit for instrument practice.","author":"ttomohisa","license":"MIT","languages":["ja","en"]};
-      const BUILD_MANIFEST = {"appName":"Music Practice Kit","appVersion":"1.0.0","generatedAtUtc":"2026-10-04T04:56:06Z","dependencyCount":0,"dependencies":[]};
+      const BUILD_MANIFEST = {"appName":"Music Practice Kit","appVersion":"1.0.0","generatedAtUtc":"2026-10-04T05:12:54Z","dependencyCount":0,"dependencies":[]};
       const EMBEDDED_ASSET_BUNDLE_BASE64 = 'eyJkZXBlbmRlbmNpZXMiOnt9fQ==';
 
       function decodeBase64Utf8(base64) {
@@ -919,7 +919,7 @@
           metronomeTitle: 'メトロノーム', metronomeSubtitle: 'TAP BPM・拍子・アクセント', stopped: '停止中', running: '再生中', startMetronome: 'メトロノームを開始', stopMetronome: 'メトロノームを停止', tapHelp: 'リズムに合わせて3回以上タップ', beatsPerBar: '1小節の拍数', accentFirst: '1拍目をアクセント', accentHint: '小節頭を高い音で強調', metronomeVolume: '音量',
           rampTitle: '少しずつ速くする練習', rampStart: '開始 BPM', rampTarget: '目標 BPM', rampIncrement: '増分 BPM', rampEvery: '変更間隔（小節）',
           rampHint: '小節の頭で上げ、目標BPMで維持。設定変更は停止中に。BPM操作・TAPで通常モードに戻ります。',
-          rampOff: '通常モード', rampReady: '{start} → {target} BPM · {bars}小節ごとに +{increment} · 開始待ち', rampProgress: '現在 {bpm} BPM · 次の変更まであと{bars}小節', rampHolding: '現在 {bpm} BPM · 目標テンポを維持', metroPaused: '一時停止中', rampPaused: '一時停止中 · {bpm} BPM · 戻ると同じ小節から再開',
+          rampBar: '小節', rampBars: '小節', rampOff: '通常モード', rampReady: '{start} → {target} BPM · {bars}小節ごとに +{increment} · 開始待ち', rampProgress: '現在 {bpm} BPM · 次の変更まであと{bars}小節', rampHolding: '現在 {bpm} BPM · 目標テンポを維持', metroPaused: '一時停止中', rampPaused: '一時停止中 · {bpm} BPM · 戻ると同じ小節から再開',
           rampInvalid: '整数で入力してください：BPM 30〜300（目標は開始以上）、増分 1〜270、小節数 1〜64。',
           helpRampTitle: '少しずつ速くする練習', helpRampBody: '開始・目標BPM、増分、変更間隔を設定してオンにし、メトロノームを開始します。指定した小節数を終えた次の小節頭でテンポを上げ、目標で維持します。停止後は開始BPMからやり直します。BPMの手動操作・TAPで通常モードに戻ります。設定と拍子は停止中に変更できます。ページを離れたり音声が中断された場合は一時停止し、戻ると同じテンポで小節をやり直します。',
           droneTitle: 'ドローン音', droneSubtitle: 'ロングトーン・音程練習の基準音', note: '音', wave: '波形', volume: '音量', sine: 'サイン', triangle: 'トライアングル', startDrone: 'ドローン開始', stopDrone: 'ドローン停止',
@@ -947,7 +947,7 @@
           metronomeTitle: 'Metronome', metronomeSubtitle: 'TAP BPM · Meter · Accent', stopped: 'Stopped', running: 'Playing', startMetronome: 'Start metronome', stopMetronome: 'Stop metronome', tapHelp: 'Tap at least 3 times with the rhythm', beatsPerBar: 'Beats per bar', accentFirst: 'Accent first beat', accentHint: 'Higher click on the bar start', metronomeVolume: 'Volume',
           rampTitle: 'Gradually increase tempo', rampStart: 'Start BPM', rampTarget: 'Target BPM', rampIncrement: 'Increase BPM', rampEvery: 'Change every (bars)',
           rampHint: 'Increase at bar starts, then hold the target. Stop to edit settings. Manual BPM or TAP returns to normal mode.',
-          rampOff: 'Normal mode', rampReady: '{start} → {target} BPM · +{increment} every {bars} bars · Ready', rampProgress: 'Current {bpm} BPM · {bars} bars until next change', rampHolding: 'Current {bpm} BPM · Holding target', metroPaused: 'Paused', rampPaused: 'Paused · {bpm} BPM · Return to repeat this bar',
+          rampBar: 'bar', rampBars: 'bars', rampOff: 'Normal mode', rampReady: '{start} → {target} BPM · +{increment} every {bars} {barUnit} · Ready', rampProgress: 'Current {bpm} BPM · {bars} {barUnit} until next change', rampHolding: 'Current {bpm} BPM · Holding target', metroPaused: 'Paused', rampPaused: 'Paused · {bpm} BPM · Return to repeat this bar',
           rampInvalid: 'Use whole numbers: BPM 30–300 (target at least start), increase 1–270, and bars 1–64.',
           helpRampTitle: 'Gradually increase tempo', helpRampBody: 'Set the start and target BPM, increase, and bar interval, enable the option, then start the metronome. Tempo increases on the first beat after each complete group of bars and holds at the target. Stop and restart begins at the start BPM. Manual BPM controls or the first TAP return to normal mode. Stop to edit ramp settings or meter. Hiding the page or interrupted audio pauses playback; returning repeats the interrupted bar at the same tempo without catching up.',
           droneTitle: 'Drone tone', droneSubtitle: 'Reference tone for long tones and intonation', note: 'Note', wave: 'Wave', volume: 'Volume', sine: 'Sine', triangle: 'Triangle', startDrone: 'Start drone', stopDrone: 'Stop drone',
@@ -1372,6 +1372,7 @@
           if (metroRunning) values.bars = settings.rampEveryBars - completed % settings.rampEveryBars;
           key = !metroRunning ? 'rampReady' : metroPaused ? 'rampPaused' : metroDisplayBpm >= settings.rampTargetBpm ? 'rampHolding' : 'rampProgress';
         }
+        values.barUnit = t(values.bars === 1 ? 'rampBar' : 'rampBars');
         const text = t(key, values);
         if ($('#rampStatus').textContent !== text) $('#rampStatus').textContent = text;
       }

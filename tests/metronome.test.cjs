@@ -227,3 +227,18 @@ test('existing tuner pitch detector still detects reference tones without microp
     assert.ok(result.confidence > .66);
   }
 });
+
+test('English ramp status uses singular bar for one and plural bars for larger counts', () => {
+  const single = rampFixture({ rampEveryBars: 1 }); single.app.initControls();
+  assert.match(single.elements.get('rampStatus').textContent, /every 1 bar · Ready/);
+  single.app.startMetronome(); single.tickUntil(.2);
+  assert.match(single.elements.get('rampStatus').textContent, /1 bar until next change/);
+  const multiple = rampFixture(); multiple.app.initControls();
+  assert.match(multiple.elements.get('rampStatus').textContent, /every 4 bars · Ready/);
+  multiple.app.startMetronome(); multiple.tickUntil(.2);
+  assert.match(multiple.elements.get('rampStatus').textContent, /4 bars until next change/);
+  multiple.tickUntil(12.2);
+  assert.match(multiple.elements.get('rampStatus').textContent, /1 bar until next change/);
+  multiple.elements.get('languageButton').fire('click');
+  assert.match(multiple.elements.get('rampStatus').textContent, /あと1小節/);
+});
