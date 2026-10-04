@@ -55,6 +55,11 @@ On smartphones, a safe-area-aware bottom navigation scrolls to Tuner, Metronome,
 - Optional first-beat accent.
 - Beat indicator visible on desktop and mobile.
 - Use Web Audio scheduling against `AudioContext.currentTime` for stable timing.
+- Optional tempo ramp: start/target 30–300 BPM, positive integer increase 1–270 BPM, every 1–64 complete bars. Defaults: 60 → 100, +5 every 4 bars.
+- Increase only at the next bar start, clamp to the target and hold. Show audible BPM and bars until the next change.
+- Stop/restart resets the ramp. Manual BPM controls and the first TAP exit ramp mode.
+- Editing ramp settings or meter during ramp playback requires stopping; toggling the mode restarts playback.
+- Hidden pages/audio interruptions pause playback. Resume repeats the interrupted bar without counting background time or queuing catch-up clicks.
 
 ## 6. Drone requirements
 
@@ -105,6 +110,7 @@ Persist only lightweight preferences when localStorage is available:
 - BPM.
 - Beats per bar.
 - Accent setting.
+- Ramp mode and its four settings, never playback state.
 - Drone note, wave, and volume.
 - Timer preset/custom duration.
 - Wake lock preference.

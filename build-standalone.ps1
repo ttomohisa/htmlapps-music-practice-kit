@@ -61,6 +61,8 @@ $output = $source.Replace('__APP_CONFIG_JSON__', $configJson).Replace('__BUILD_M
 
 New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
 Write-Utf8NoBom $OutputPath $output
+# Browser Kitty reads this root alias; keep it generated from the same source.
+Write-Utf8NoBom (Join-Path $Root 'music-practice-kit.html') $output
 Write-Utf8NoBom $ManifestPath (ConvertTo-CompactJson $buildManifest)
 Write-Utf8NoBom (Join-Path $DistDir '.nojekyll') ''
 

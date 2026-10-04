@@ -20,7 +20,7 @@ dist/index.self-extract.html
 - Audio context manager shared by metronome and drone.
 - Microphone manager shared by tuner, spectrum, and recorder.
 - YIN-style pitch estimator throttled on the animation loop.
-- Metronome scheduler based on Web Audio clock look-ahead scheduling.
+- Metronome scheduler based on Web Audio clock look-ahead scheduling. Ramp progress advances only at complete bar boundaries. Scheduled beat snapshots separate future tempo from audible/UI tempo; tracked nodes/timers are cancelled on stop or mode changes. Visibility/audio interruptions rebase at the same bar and tempo, so stalled timers never emit a catch-up burst.
 - Drone oscillator manager.
 - Drift-corrected practice timer.
 - MediaRecorder wrapper and object-URL lifecycle.
@@ -38,3 +38,5 @@ The microphone `MediaStreamAudioSourceNode` connects only to an `AnalyserNode`; 
 - `__EMBEDDED_ASSET_BUNDLE_BASE64__`
 
 The app currently has no third-party assets, so the embedded asset bundle is empty while preserving template compatibility.
+
+The build also writes `music-practice-kit.html`, the Browser Kitty root alias, byte-identical to `dist/index.html`. Dependency-free Node tests cover the actual inline runtime in a deterministic DOM/audio fixture and verify all generated artifacts.

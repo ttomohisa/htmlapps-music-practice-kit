@@ -359,6 +359,13 @@
     }
     .tap-button { min-height: 82px; border-radius: 16px; font-size: 17px; letter-spacing: .04em; }
     .tap-help { color: var(--muted); font-size: 11px; }
+    .ramp-panel { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .ramp-heading { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 720; cursor: pointer; min-height: 40px; }
+    .ramp-heading input { width: 18px; height: 18px; accent-color: var(--accent); }
+    .ramp-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
+    .ramp-hint, .ramp-status { font-size: 12px; line-height: 1.6; margin: 10px 0 0; color: var(--muted); }
+    .ramp-status { color: var(--accent); font-weight: 680; font-variant-numeric: tabular-nums; }
+    @media (max-width: 580px) { .ramp-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .metro-options {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -733,6 +740,17 @@
             <div class="range-row"><input id="metroVolume" type="range" min="0" max="1" step="0.05" value="0.65"><span class="range-value" id="metroVolumeValue">65%</span></div>
           </div>
         </div>
+        <div class="ramp-panel">
+          <label class="ramp-heading" for="rampToggle"><input id="rampToggle" type="checkbox" aria-describedby="rampHint"><span data-i18n="rampTitle">少しずつ速くする練習</span></label>
+          <div class="ramp-fields">
+            <div class="control-group"><label class="control-label" for="rampStartBpm" data-i18n="rampStart">開始 BPM</label><input class="input-number" id="rampStartBpm" type="number" min="30" max="300" step="1" value="60" inputmode="numeric"></div>
+            <div class="control-group"><label class="control-label" for="rampTargetBpm" data-i18n="rampTarget">目標 BPM</label><input class="input-number" id="rampTargetBpm" type="number" min="30" max="300" step="1" value="100" inputmode="numeric"></div>
+            <div class="control-group"><label class="control-label" for="rampIncrement" data-i18n="rampIncrement">増分 BPM</label><input class="input-number" id="rampIncrement" type="number" min="1" max="270" step="1" value="5" inputmode="numeric"></div>
+            <div class="control-group"><label class="control-label" for="rampEveryBars" data-i18n="rampEvery">変更間隔（小節）</label><input class="input-number" id="rampEveryBars" type="number" min="1" max="64" step="1" value="4" inputmode="numeric"></div>
+          </div>
+          <p class="ramp-status" id="rampStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+          <p class="ramp-hint" id="rampHint" data-i18n="rampHint">小節の頭で上げ、目標BPMで維持。設定変更は停止中に。BPM操作・TAPで通常モードに戻ります。</p>
+        </div>
       </div>
     </section>
 
@@ -838,6 +856,7 @@
       <h3 data-i18n="helpBasicsTitle">基本操作</h3>
       <ol><li data-i18n="helpStep1">チューナーの「マイクを開始」を押し、ブラウザーのマイク権限を許可します。楽器モードでは弦をタップすると狙う音を固定できます。</li><li data-i18n="helpStep2">メトロノームはBPMをスライダーか±ボタンで調整できます。TAPをリズムに合わせて3回以上押すとテンポを測れます。</li><li data-i18n="helpStep3">練習ではドローン音、タイマー、録音、スペクトラムを必要なものだけ使えます。</li></ol>
       <h3 data-i18n="helpPrivacyTitle">プライバシー</h3><p data-i18n="helpPrivacyBody">マイク音声・録音・設定はこのページ内で処理され、このアプリから外部へ送信されません。録音は保存ボタンを押したときだけファイルとして端末へ保存します。</p>
+      <h3 data-i18n="helpRampTitle">少しずつ速くする練習</h3><p data-i18n="helpRampBody">開始・目標BPM、増分、変更間隔を設定してオンにし、メトロノームを開始します。指定した小節数を終えた次の小節頭でテンポを上げ、目標で維持します。停止後は開始BPMからやり直します。BPMの手動操作・TAPで通常モードに戻ります。ページを離れたり音声が中断された場合は一時停止し、戻ると同じテンポで小節をやり直します。</p>
       <h3 data-i18n="helpTunerTitle">チューナーのコツ</h3><ul><li data-i18n="helpTuner1">周囲が静かな場所で、1音ずつはっきり鳴らすと安定しやすくなります。</li><li data-i18n="helpTuner2">入力感度を上げすぎると周囲の雑音を拾いやすくなります。反応しない場合だけ少し調整してください。</li><li data-i18n="helpTuner3">A4基準ピッチは430.0〜450.0 Hzで変更できます。メトロノームとは独立し、ドローン音にも反映されます。</li></ul>
       <h3 data-i18n="helpNotesTitle">注意事項</h3><ul><li data-i18n="helpNoteMic">マイク機能はブラウザーの権限と安全なコンテキストの制約を受けます。ローカルHTMLで使えない場合はHTTPSまたはlocalhostで開いてください。</li><li data-i18n="helpNoteRecording">録音形式はブラウザーが対応する形式を自動選択します。録音データはページを閉じると失われます。</li><li data-i18n="helpNoteAudio">メトロノームやドローン音をスピーカーから鳴らすと、録音やチューナーのマイクがその音を拾う場合があります。必要に応じてイヤホンを使ってください。</li><li data-i18n="helpNoteWake">「画面を消さない」は対応ブラウザーでのみ動作し、OSの省電力状態などにより解除されることがあります。</li></ul>
       <p class="dialog-note" data-i18n="helpOffline">メトロノーム、TAP、ドローン、タイマーはマイク権限がなくても使えます。</p>
@@ -877,6 +896,7 @@
       const defaultSettings = {
         language: '', referencePitch: 440, tunerMode: 'chromatic', noiseGate: 0.018,
         bpm: 120, beatsPerBar: 4, accent: true, metroVolume: 0.65,
+        rampEnabled: false, rampStartBpm: 60, rampTargetBpm: 100, rampIncrement: 5, rampEveryBars: 4,
         droneMidi: 57, droneWave: 'sine', droneVolume: 0.12,
         timerMinutes: 10, keepAwake: false
       };
@@ -897,6 +917,11 @@
           pitchWaiting: '—', pitchFlat: '低い', pitchSharp: '高い', pitchInTune: '合っています', referencePitch: '基準ピッチ A4', inputSensitivity: '入力感度', startMic: 'マイクを開始', stopMic: 'マイクを停止',
           stringHint: '弦をタップするとその音に固定。もう一度タップで自動に戻ります。', micHint: 'マイク入力はスピーカーへ返しません。ハウリングを起こしにくい構成です。',
           metronomeTitle: 'メトロノーム', metronomeSubtitle: 'TAP BPM・拍子・アクセント', stopped: '停止中', running: '再生中', startMetronome: 'メトロノームを開始', stopMetronome: 'メトロノームを停止', tapHelp: 'リズムに合わせて3回以上タップ', beatsPerBar: '1小節の拍数', accentFirst: '1拍目をアクセント', accentHint: '小節頭を高い音で強調', metronomeVolume: '音量',
+          rampTitle: '少しずつ速くする練習', rampStart: '開始 BPM', rampTarget: '目標 BPM', rampIncrement: '増分 BPM', rampEvery: '変更間隔（小節）',
+          rampHint: '小節の頭で上げ、目標BPMで維持。設定変更は停止中に。BPM操作・TAPで通常モードに戻ります。',
+          rampOff: '通常モード', rampReady: '{start} → {target} BPM · {bars}小節ごとに +{increment} · 開始待ち', rampProgress: '現在 {bpm} BPM · 次の変更まであと{bars}小節', rampHolding: '現在 {bpm} BPM · 目標テンポを維持', metroPaused: '一時停止中', rampPaused: '一時停止中 · {bpm} BPM · 戻ると同じ小節から再開',
+          rampInvalid: '整数で入力してください：BPM 30〜300（目標は開始以上）、増分 1〜270、小節数 1〜64。',
+          helpRampTitle: '少しずつ速くする練習', helpRampBody: '開始・目標BPM、増分、変更間隔を設定してオンにし、メトロノームを開始します。指定した小節数を終えた次の小節頭でテンポを上げ、目標で維持します。停止後は開始BPMからやり直します。BPMの手動操作・TAPで通常モードに戻ります。設定と拍子は停止中に変更できます。ページを離れたり音声が中断された場合は一時停止し、戻ると同じテンポで小節をやり直します。',
           droneTitle: 'ドローン音', droneSubtitle: 'ロングトーン・音程練習の基準音', note: '音', wave: '波形', volume: '音量', sine: 'サイン', triangle: 'トライアングル', startDrone: 'ドローン開始', stopDrone: 'ドローン停止',
           timerTitle: '練習タイマー', timerSubtitle: '集中時間を決めて、練習だけに集中', timerReady: '準備OK', timerRunning: '練習中', timerPaused: '一時停止', timerFinished: '完了', customMinutes: 'カスタム（分）', keepAwake: '画面を消さない', wakeAuto: '対応端末のみ', wakeUnsupported: 'この環境では未対応', start: '開始', pause: '一時停止', resume: '再開', reset: 'リセット',
           recordTitle: '録音', recordSubtitle: '演奏を端末内で録音して聴き返す', recordReady: 'マイクを使って録音します', startRecording: '録音開始', stopRecording: '録音停止', recording: '録音中', saveRecording: '録音を保存', clearRecording: '消去', recordingSaved: '録音を保存しました', recordingCleared: '録音を消去しました', recordingUnsupported: 'このブラウザーは録音機能に対応していません',
@@ -920,6 +945,11 @@
           pitchWaiting: '—', pitchFlat: 'Flat', pitchSharp: 'Sharp', pitchInTune: 'In tune', referencePitch: 'Reference A4', inputSensitivity: 'Input sensitivity', startMic: 'Start microphone', stopMic: 'Stop microphone',
           stringHint: 'Tap a string to lock the target. Tap it again to return to automatic mode.', micHint: 'Microphone input is never routed to the speakers, reducing feedback risk.',
           metronomeTitle: 'Metronome', metronomeSubtitle: 'TAP BPM · Meter · Accent', stopped: 'Stopped', running: 'Playing', startMetronome: 'Start metronome', stopMetronome: 'Stop metronome', tapHelp: 'Tap at least 3 times with the rhythm', beatsPerBar: 'Beats per bar', accentFirst: 'Accent first beat', accentHint: 'Higher click on the bar start', metronomeVolume: 'Volume',
+          rampTitle: 'Gradually increase tempo', rampStart: 'Start BPM', rampTarget: 'Target BPM', rampIncrement: 'Increase BPM', rampEvery: 'Change every (bars)',
+          rampHint: 'Increase at bar starts, then hold the target. Stop to edit settings. Manual BPM or TAP returns to normal mode.',
+          rampOff: 'Normal mode', rampReady: '{start} → {target} BPM · +{increment} every {bars} bars · Ready', rampProgress: 'Current {bpm} BPM · {bars} bars until next change', rampHolding: 'Current {bpm} BPM · Holding target', metroPaused: 'Paused', rampPaused: 'Paused · {bpm} BPM · Return to repeat this bar',
+          rampInvalid: 'Use whole numbers: BPM 30–300 (target at least start), increase 1–270, and bars 1–64.',
+          helpRampTitle: 'Gradually increase tempo', helpRampBody: 'Set the start and target BPM, increase, and bar interval, enable the option, then start the metronome. Tempo increases on the first beat after each complete group of bars and holds at the target. Stop and restart begins at the start BPM. Manual BPM controls or the first TAP return to normal mode. Stop to edit ramp settings or meter. Hiding the page or interrupted audio pauses playback; returning repeats the interrupted bar at the same tempo without catching up.',
           droneTitle: 'Drone tone', droneSubtitle: 'Reference tone for long tones and intonation', note: 'Note', wave: 'Wave', volume: 'Volume', sine: 'Sine', triangle: 'Triangle', startDrone: 'Start drone', stopDrone: 'Stop drone',
           timerTitle: 'Practice timer', timerSubtitle: 'Set a focused practice block', timerReady: 'Ready', timerRunning: 'Practicing', timerPaused: 'Paused', timerFinished: 'Finished', customMinutes: 'Custom minutes', keepAwake: 'Keep screen awake', wakeAuto: 'Supported devices only', wakeUnsupported: 'Not supported here', start: 'Start', pause: 'Pause', resume: 'Resume', reset: 'Reset',
           recordTitle: 'Recorder', recordSubtitle: 'Record locally, listen back, and save', recordReady: 'Uses the current microphone input', startRecording: 'Start recording', stopRecording: 'Stop recording', recording: 'Recording', saveRecording: 'Save recording', clearRecording: 'Clear', recordingSaved: 'Recording saved', recordingCleared: 'Recording cleared', recordingUnsupported: 'Recording is not supported by this browser',
@@ -958,6 +988,14 @@
       let schedulerTimer = 0;
       let nextClickTime = 0;
       let currentBeat = 0;
+      let metroBpm = settings.bpm;
+      let metroCompletedBars = 0;
+      let metroBarStarted = false;
+      let metroPaused = false;
+      let metroDisplayBpm = settings.rampEnabled ? settings.rampStartBpm : settings.bpm;
+      let metroPlayedBeat = null;
+      let metroScheduledBeats = [];
+      const metroNodes = new Set();
       let metroVisualTimers = new Set();
       let tapTimes = [];
 
@@ -983,9 +1021,20 @@
 
       let toastTimer = 0;
 
+      function boundedInteger(value, min, max, fallback) {
+        return value !== null && value !== '' && Number.isFinite(Number(value)) ? clamp(Math.round(Number(value)), min, max) : fallback;
+      }
       function loadSettings() {
-        try { return { ...defaultSettings, ...(JSON.parse(localStorage.getItem(storageKey) || '{}')) }; }
-        catch { return { ...defaultSettings }; }
+        let loaded = { ...defaultSettings };
+        try { loaded = { ...loaded, ...JSON.parse(localStorage.getItem(storageKey) || '{}') }; } catch { /* use defaults */ }
+        loaded.bpm = boundedInteger(loaded.bpm, 30, 300, 120);
+        loaded.beatsPerBar = boundedInteger(loaded.beatsPerBar, 2, 7, 4);
+        loaded.rampEnabled = loaded.rampEnabled === true;
+        loaded.rampStartBpm = boundedInteger(loaded.rampStartBpm, 30, 300, 60);
+        loaded.rampTargetBpm = Math.max(loaded.rampStartBpm, boundedInteger(loaded.rampTargetBpm, 30, 300, 100));
+        loaded.rampIncrement = boundedInteger(loaded.rampIncrement, 1, 270, 5);
+        loaded.rampEveryBars = boundedInteger(loaded.rampEveryBars, 1, 64, 4);
+        return loaded;
       }
       function saveSettings() {
         try { localStorage.setItem(storageKey, JSON.stringify(settings)); } catch { /* storage may be unavailable */ }
@@ -1026,7 +1075,10 @@
         if (bpm < 40) return 'Grave'; if (bpm < 60) return 'Largo'; if (bpm < 76) return 'Adagio'; if (bpm < 108) return 'Andante'; if (bpm < 120) return 'Moderato'; if (bpm < 156) return 'Allegro'; if (bpm < 176) return 'Vivace'; if (bpm < 200) return 'Presto'; return 'Prestissimo';
       }
       function ensureAudioContext() {
-        if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+          audioContext.addEventListener('statechange', () => { if (metroRunning) metroScheduler(); });
+        }
         if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
         return audioContext;
       }
@@ -1284,61 +1336,147 @@
         } catch { if (!silent) showToast(t('deviceRefreshFailed')); }
       }
 
-      function setBpm(value, persist = true) {
-        settings.bpm = clamp(Math.round(Number(value) || 120), 30, 300);
-        $('#bpmNumber').textContent = settings.bpm;
-        $('#bpmSlider').value = settings.bpm;
-        $('#tempoName').textContent = tempoNameFor(settings.bpm);
-        if (persist) saveSettings();
+      function renderBpm(bpm) {
+        metroDisplayBpm = bpm;
+        $('#bpmNumber').textContent = bpm; $('#bpmSlider').value = bpm; $('#tempoName').textContent = tempoNameFor(bpm);
+      }
+      function setBpm(value) {
+        if (metroRunning) syncMetroProgress();
+        settings.bpm = boundedInteger(value, 30, 300, 120);
+        settings.rampEnabled = false;
+        metroBpm = settings.bpm;
+        if (metroRunning) {
+          // Cancel the look-ahead queue before switching mode. The next beat keeps
+          // its place in the meter, with no old ramp callback able to overwrite UI.
+          clearMetroSchedule();
+          currentBeat = metroPlayedBeat ? (metroPlayedBeat.beatIndex + 1) % settings.beatsPerBar : 0;
+          metroCompletedBars = 0; metroBarStarted = false;
+          nextClickTime = Math.max(audioContext.currentTime + 0.06, metroPlayedBeat ? metroPlayedBeat.time + 60 / metroBpm : 0);
+          if (metroPlayedBeat) metroPlayedBeat = { ...metroPlayedBeat, bpm: metroBpm, completedBars: 0 };
+        }
+        renderBpm(metroBpm); updateMetronomeUi(); saveSettings();
+      }
+      function renderRampInputs() {
+        ['rampStartBpm', 'rampTargetBpm', 'rampIncrement', 'rampEveryBars'].forEach(key => { $('#'+key).value = settings[key]; });
+      }
+      function updateRampControls() {
+        $('#rampToggle').checked = settings.rampEnabled;
+        ['rampStartBpm', 'rampTargetBpm', 'rampIncrement', 'rampEveryBars'].forEach(key => {
+          $('#'+key).disabled = metroRunning && settings.rampEnabled;
+        });
+        $('#beatsPerBar').disabled = metroRunning && settings.rampEnabled;
+        const values = { start: settings.rampStartBpm, target: settings.rampTargetBpm, increment: settings.rampIncrement, bars: settings.rampEveryBars, bpm: metroDisplayBpm };
+        let key = 'rampOff';
+        if (settings.rampEnabled) {
+          const completed = metroPlayedBeat?.completedBars || 0;
+          if (metroRunning) values.bars = settings.rampEveryBars - completed % settings.rampEveryBars;
+          key = !metroRunning ? 'rampReady' : metroPaused ? 'rampPaused' : metroDisplayBpm >= settings.rampTargetBpm ? 'rampHolding' : 'rampProgress';
+        }
+        const text = t(key, values);
+        if ($('#rampStatus').textContent !== text) $('#rampStatus').textContent = text;
+      }
+      function changeRampSetting(event) {
+        const key = event.target.id;
+        if (metroRunning && settings.rampEnabled) { renderRampInputs(); updateRampControls(); return; }
+        const value = Number(event.target.value);
+        const min = key === 'rampStartBpm' || key === 'rampTargetBpm' ? 30 : 1;
+        const max = key === 'rampEveryBars' ? 64 : key === 'rampIncrement' ? 270 : 300;
+        if (!Number.isInteger(value) || value < min || value > max || (key === 'rampTargetBpm' && value < settings.rampStartBpm) || (key === 'rampStartBpm' && value > settings.rampTargetBpm)) {
+          renderRampInputs(); updateRampControls(); showToast(t('rampInvalid')); return;
+        }
+        settings[key] = value; saveSettings(); renderRampInputs();
+        if (!metroRunning && settings.rampEnabled) renderBpm(settings.rampStartBpm);
+        updateRampControls();
       }
       function renderBeatDots() {
         const wrap = $('#beatDots'); wrap.replaceChildren();
         for (let i = 0; i < settings.beatsPerBar; i += 1) { const dot = document.createElement('span'); dot.className = `beat-dot${i === 0 ? ' accent' : ''}`; wrap.append(dot); }
       }
+      function syncMetroProgress() {
+        while (metroScheduledBeats.length && metroScheduledBeats[0].time <= audioContext.currentTime) metroPlayedBeat = metroScheduledBeats.shift();
+        if (metroPlayedBeat) renderBpm(metroPlayedBeat.bpm);
+        updateRampControls();
+      }
+      function clearMetroSchedule() {
+        metroVisualTimers.forEach(id => clearTimeout(id)); metroVisualTimers.clear();
+        metroNodes.forEach(({ oscillator, gain }) => { try { oscillator.stop(); oscillator.disconnect(); gain.disconnect(); } catch {} }); metroNodes.clear();
+        metroScheduledBeats = [];
+        $$('#beatDots .beat-dot').forEach(dot => dot.classList.remove('active'));
+      }
+      function pauseMetroSchedule() {
+        if (metroPaused) return;
+        syncMetroProgress(); clearMetroSchedule();
+        metroBpm = metroPlayedBeat?.bpm ?? metroBpm;
+        metroCompletedBars = metroPlayedBeat?.completedBars || 0;
+        // Repeat the interrupted bar, never count unplayed background time.
+        currentBeat = 0; metroBarStarted = false; metroPaused = true;
+        updateMetronomeUi();
+      }
       function scheduleClick(time, beatIndex) {
-        const ctx = ensureAudioContext();
+        const ctx = audioContext;
         const oscillator = ctx.createOscillator();
         const gain = ctx.createGain();
+        const node = { oscillator, gain }; metroNodes.add(node);
+        oscillator.onended = () => { metroNodes.delete(node); oscillator.disconnect(); gain.disconnect(); };
         const accent = settings.accent && beatIndex === 0;
         oscillator.type = 'square'; oscillator.frequency.setValueAtTime(accent ? 1450 : 980, time);
         const volume = settings.metroVolume * (accent ? 0.42 : 0.30);
         gain.gain.setValueAtTime(0.0001, time); gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, volume), time + 0.002); gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.035);
         oscillator.connect(gain); gain.connect(ctx.destination); oscillator.start(time); oscillator.stop(time + 0.045);
-        const delay = Math.max(0, (time - ctx.currentTime) * 1000);
+        metroScheduledBeats.push({ time, beatIndex, bpm: metroBpm, completedBars: metroCompletedBars });
         const timer = window.setTimeout(() => {
           metroVisualTimers.delete(timer);
+          if (!metroRunning || metroPaused) return;
+          syncMetroProgress();
+          // Delayed UI callbacks must not flash historical beats after a stall.
+          if (ctx.currentTime - time > 0.15) return;
           const dots = $$('#beatDots .beat-dot'); dots.forEach((dot, index) => dot.classList.toggle('active', index === beatIndex));
-          window.setTimeout(() => dots[beatIndex]?.classList.remove('active'), 90);
-        }, delay);
+          const offTimer = window.setTimeout(() => { metroVisualTimers.delete(offTimer); dots[beatIndex]?.classList.remove('active'); }, 90);
+          metroVisualTimers.add(offTimer);
+        }, Math.max(0, (time - ctx.currentTime) * 1000));
         metroVisualTimers.add(timer);
       }
       function metroScheduler() {
         if (!metroRunning || !audioContext) return;
-        const secondsPerBeat = 60 / settings.bpm;
+        if (document.visibilityState === 'hidden' || audioContext.state !== 'running') { pauseMetroSchedule(); return; }
+        syncMetroProgress();
+        if (nextClickTime < audioContext.currentTime) pauseMetroSchedule();
+        if (metroPaused) { nextClickTime = audioContext.currentTime + 0.06; metroPaused = false; updateMetronomeUi(); }
         while (nextClickTime < audioContext.currentTime + 0.11) {
+          if (currentBeat === 0) {
+            if (metroBarStarted) metroCompletedBars += 1;
+            // A resumed bar is repeated at its current BPM, not incremented twice.
+            if (metroBarStarted && settings.rampEnabled && metroCompletedBars % settings.rampEveryBars === 0) metroBpm = Math.min(settings.rampTargetBpm, metroBpm + settings.rampIncrement);
+            metroBarStarted = true;
+          }
           scheduleClick(nextClickTime, currentBeat);
-          nextClickTime += secondsPerBeat;
+          // Recompute after the boundary: the new bar uses its new tempo immediately.
+          nextClickTime += 60 / metroBpm;
           currentBeat = (currentBeat + 1) % settings.beatsPerBar;
         }
       }
       function startMetronome() {
         if (metroRunning) return;
         const ctx = ensureAudioContext();
-        metroRunning = true; currentBeat = 0; nextClickTime = ctx.currentTime + 0.06;
+        metroRunning = true; metroPaused = false; currentBeat = 0; metroCompletedBars = 0; metroBarStarted = false; metroPlayedBeat = null;
+        metroBpm = settings.rampEnabled ? settings.rampStartBpm : settings.bpm;
+        renderBpm(metroBpm); nextClickTime = ctx.currentTime + 0.06;
         metroScheduler(); schedulerTimer = window.setInterval(metroScheduler, 25); updateMetronomeUi(); showToast(t('metronomeStarted'));
       }
       function stopMetronome(showMessage = true) {
-        metroRunning = false; clearInterval(schedulerTimer); schedulerTimer = 0;
-        metroVisualTimers.forEach(id => clearTimeout(id)); metroVisualTimers.clear();
-        $$('#beatDots .beat-dot').forEach(dot => dot.classList.remove('active'));
+        metroRunning = false; metroPaused = false; clearInterval(schedulerTimer); schedulerTimer = 0;
+        clearMetroSchedule(); metroPlayedBeat = null;
+        renderBpm(settings.rampEnabled ? settings.rampStartBpm : settings.bpm);
         updateMetronomeUi(); if (showMessage) showToast(t('metronomeStopped'));
       }
       function updateMetronomeUi() {
-        $('#metroStatusPill').classList.toggle('active', metroRunning); $('#metroStatusText').textContent = t(metroRunning ? 'running' : 'stopped');
+        $('#metroStatusPill').classList.toggle('active', metroRunning && !metroPaused); $('#metroStatusText').textContent = t(metroPaused ? 'metroPaused' : metroRunning ? 'running' : 'stopped');
         $('#metroPlayButton').setAttribute('aria-label', t(metroRunning ? 'stopMetronome' : 'startMetronome')); $('#metroPlayButton').setAttribute('aria-pressed', String(metroRunning));
         $('#metroPlayIcon').innerHTML = metroRunning ? '<path d="M8 7h3v10H8zM13 7h3v10h-3z"/>' : '<path d="m9 7 8 5-8 5z"/>';
+        updateRampControls();
       }
       function handleTap() {
+        if (settings.rampEnabled) { setBpm(metroDisplayBpm); tapTimes = []; }
         const now = performance.now();
         if (!tapTimes.length || now - tapTimes[tapTimes.length - 1] > 2000) tapTimes = [];
         tapTimes.push(now); if (tapTimes.length > 8) tapTimes.shift();
@@ -1540,7 +1678,7 @@
       }
       function initControls() {
         $('#referencePitch').value = Number(settings.referencePitch).toFixed(1); const sensitivity = Math.round((0.08 - settings.noiseGate) / 0.076 * 100); $('#noiseGate').value = clamp(sensitivity, 0, 100); $('#noiseGateValue').textContent = `${clamp(sensitivity, 0, 100)}%`;
-        setBpm(settings.bpm, false); $('#beatsPerBar').value = String(settings.beatsPerBar); $('#accentToggle').checked = settings.accent; $('#metroVolume').value = settings.metroVolume; $('#metroVolumeValue').textContent = `${Math.round(settings.metroVolume * 100)}%`; renderBeatDots();
+        renderBpm(settings.rampEnabled ? settings.rampStartBpm : settings.bpm); renderRampInputs(); updateRampControls(); $('#beatsPerBar').value = String(settings.beatsPerBar); $('#accentToggle').checked = settings.accent; $('#metroVolume').value = settings.metroVolume; $('#metroVolumeValue').textContent = `${Math.round(settings.metroVolume * 100)}%`; renderBeatDots();
         buildDroneOptions(); $('#droneWave').value = settings.droneWave; $('#droneVolume').value = settings.droneVolume; $('#droneVolumeValue').textContent = `${Math.round(settings.droneVolume / 0.35 * 100)}%`;
         setTimerMinutes(settings.timerMinutes); $('#wakeToggle').checked = Boolean(settings.keepAwake); $('#wakeToggle').disabled = !('wakeLock' in navigator); $('#wakeSupportText').textContent = 'wakeLock' in navigator ? t('wakeAuto') : t('wakeUnsupported');
         initTunerModes(); resetTunerDisplay(); updateBuildInfo(); updateSecureBadge(); clearSpectrum();
@@ -1556,8 +1694,23 @@
       $('#refreshDevices').addEventListener('click', () => refreshAudioDevices(false));
 
       $('#metroPlayButton').addEventListener('click', () => metroRunning ? stopMetronome() : startMetronome()); $('#bpmSlider').addEventListener('input', event => setBpm(event.target.value));
-      $('#bpmMinus5').addEventListener('click', () => setBpm(settings.bpm - 5)); $('#bpmMinus1').addEventListener('click', () => setBpm(settings.bpm - 1)); $('#bpmPlus1').addEventListener('click', () => setBpm(settings.bpm + 1)); $('#bpmPlus5').addEventListener('click', () => setBpm(settings.bpm + 5));
-      $('#tapButton').addEventListener('click', handleTap); $('#beatsPerBar').addEventListener('change', event => { settings.beatsPerBar = Number(event.target.value); currentBeat = 0; saveSettings(); renderBeatDots(); });
+      $('#bpmMinus5').addEventListener('click', () => setBpm(metroDisplayBpm - 5)); $('#bpmMinus1').addEventListener('click', () => setBpm(metroDisplayBpm - 1)); $('#bpmPlus1').addEventListener('click', () => setBpm(metroDisplayBpm + 1)); $('#bpmPlus5').addEventListener('click', () => setBpm(metroDisplayBpm + 5));
+      $('#tapButton').addEventListener('click', handleTap);
+      $('#rampToggle').addEventListener('change', event => {
+        const wasRunning = metroRunning; const enabled = event.target.checked;
+        const manualBpm = metroDisplayBpm;
+        if (wasRunning) stopMetronome(false);
+        settings.rampEnabled = enabled; if (!enabled) settings.bpm = manualBpm;
+        tapTimes = []; saveSettings(); renderBpm(enabled ? settings.rampStartBpm : settings.bpm); updateRampControls();
+        if (wasRunning) startMetronome();
+      });
+      ['rampStartBpm', 'rampTargetBpm', 'rampIncrement', 'rampEveryBars'].forEach(id => $('#'+id).addEventListener('change', changeRampSetting));
+      $('#beatsPerBar').addEventListener('change', event => {
+        if (metroRunning && settings.rampEnabled) { event.target.value = settings.beatsPerBar; return; }
+        const wasRunning = metroRunning; if (wasRunning) stopMetronome(false);
+        settings.beatsPerBar = boundedInteger(event.target.value, 2, 7, 4); event.target.value = settings.beatsPerBar;
+        saveSettings(); renderBeatDots(); if (wasRunning) startMetronome();
+      });
       $('#accentToggle').addEventListener('change', event => { settings.accent = event.target.checked; saveSettings(); }); $('#metroVolume').addEventListener('input', event => { settings.metroVolume = Number(event.target.value); $('#metroVolumeValue').textContent = `${Math.round(settings.metroVolume * 100)}%`; saveSettings(); });
 
       $('#droneButton').addEventListener('click', () => droneOscillator ? stopDrone() : startDrone()); $('#droneNote').addEventListener('change', event => { settings.droneMidi = Number(event.target.value); saveSettings(); updateDroneNode(); updateDroneFrequencyPill(); });
@@ -1572,7 +1725,7 @@
       const navObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries => { const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]; if (!visible) return; $$('.bottom-nav button').forEach(button => button.classList.toggle('active', button.dataset.target === visible.target.id)); }, { rootMargin: '-20% 0px -60% 0px', threshold: [0.1, 0.35, 0.6] }) : null;
       if (navObserver) ['tunerSection', 'metronomeSection', 'practiceSection'].forEach(id => navObserver.observe(document.getElementById(id)));
 
-      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && settings.keepAwake && timerRunning) requestWakeLock(); });
+      document.addEventListener('visibilitychange', () => { if (metroRunning) metroScheduler(); if (document.visibilityState === 'visible' && settings.keepAwake && timerRunning) requestWakeLock(); });
       window.addEventListener('resize', clearSpectrum, { passive: true });
       window.addEventListener('pagehide', () => {
         stopMetronome(false); stopDrone(false); releaseWakeLock(); clearInterval(timerInterval); clearInterval(recordingInterval); cancelAnimationFrame(micRaf);

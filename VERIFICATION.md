@@ -20,3 +20,17 @@ Not verified in this environment:
 - Screen Wake Lock behavior on a physical mobile device.
 
 Reason: the available Chromium installation is controlled by an administrator policy that blocks navigation to localhost, `file:` URLs, and `data:` URLs.
+
+
+## Tempo-ramp change — 2026-10-04
+
+Verified in the cloud build environment (Node + official PowerShell):
+
+- 31 automated tests pass: deterministic inline-runtime timing/controller tests and standalone artifact checks.
+- Covers all 2–7 beat meters, 30–300 BPM extremes, 1/64-bar intervals, non-divisible target clamping, target hold, UI countdown, repeated start, stop/restart, manual/slider/stepper/TAP exits, queued-boundary cancellation, hidden-page and AudioContext interruption, invalid persisted/input values, and JA/EN initialization without autoplay.
+- Manual accent/meter changes, independent drone lifetime, and synthetic tuner pitch detection regressions pass.
+- Repository checks and standalone build/verification pass. For the Linux build, a temporary `powershell.exe` command alias points to the installed official `pwsh`, because the build script invokes the Windows command name.
+- Generated inline JavaScript parses; no duplicate IDs or external runtime dependency appears; CSP remains restrictive.
+- `music-practice-kit.html` exactly matches `dist/index.html`, and the self-extracting gzip payload restores the same bytes.
+
+Pending separate real-browser/preview QA: desktop and 320–390px layouts, real Web Audio output, physical microphone/recorder/wake-lock behavior, and browser console/network observations. Deterministic fixtures do not claim those device checks.
