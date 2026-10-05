@@ -35,6 +35,8 @@ The tuner, recorder, and spectrum require microphone permission. The metronome, 
 - 30–300 BPM metronome
 - ±1 / ±5 BPM controls and TAP BPM
 - 2–7 beats per bar with optional first-beat accent
+- One-action **Restart ramp** returns an active ramp to its start BPM and first beat while keeping settings.
+- Metronome volume 0% silences clicks while visual timing continues; audio startup failures return to a stopped, retryable state.
 - Web Audio clock-based look-ahead scheduling for more stable timing
 - C2–B5 drone tone with sine / triangle waveform selection
 - 5 / 10 / 15 / 30 minute practice timer presets plus custom duration
@@ -90,7 +92,7 @@ This app currently has no third-party runtime dependency, so the build does not 
 
 Enable **Gradually increase tempo** below the metronome, then press Start. The default is **60 → 100 BPM, +5 every 4 bars**. Change the start/target (30–300 BPM), increase (1–270 BPM), and interval (1–64 complete bars) while stopped. The target must be at least the start BPM.
 
-The BPM changes only at the next bar start and holds when it reaches the target. The display shows the audible BPM and bars until the next change. Stop/restart begins at the start BPM; the slider, ± buttons, or the first TAP return to normal mode. Toggling the option while playing restarts the metronome in the selected mode. Settings are saved locally, but playback never starts on page load.
+The BPM changes only at the next bar start and holds when it reaches the target. The display shows the audible BPM and bars until the next change. Use **Restart ramp** while playing (or interrupted) to return to the start BPM, first beat and full bar countdown without changing any settings. It is disabled while stopped or in normal mode. Stop/start also begins at the start BPM; the slider, ± buttons, or the first TAP return to normal mode. Toggling the option while playing restarts the metronome in the selected mode. Settings are saved locally, but playback never starts on page load.
 
 Hiding the page or interrupted audio pauses metronome playback. Returning repeats the interrupted bar at the same tempo, without a burst of catch-up clicks. No microphone permission is required.
 
