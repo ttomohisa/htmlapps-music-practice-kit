@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added Restart ramp / 最初から練習 to repeat from the configured start BPM and first beat without losing settings.
+- Fixed 0% metronome volume still scheduling a positive gain envelope; mute also silences already queued clicks while visual timing continues.
+- Fixed partial metronome startup/scheduling failures leaving a running-looking session with no scheduler; clean partial nodes, report localized retryable errors, and ignore stale callbacks.
+
 - Added optional bar-based tempo ramps with start/target BPM, increase, and interval settings; Japanese/English UI and help.
 - Added audible-tempo/countdown feedback, target holding, manual/TAP exit, and safe stop/restart/interruption handling.
 - Added dependency-free timing/controller and standalone-build regressions; regenerate the Browser Kitty root alias with the release HTML.

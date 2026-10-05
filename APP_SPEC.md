@@ -57,7 +57,9 @@ On smartphones, a safe-area-aware bottom navigation scrolls to Tuner, Metronome,
 - Use Web Audio scheduling against `AudioContext.currentTime` for stable timing.
 - Optional tempo ramp: start/target 30–300 BPM, positive integer increase 1–270 BPM, every 1–64 complete bars. Defaults: 60 → 100, +5 every 4 bars.
 - Increase only at the next bar start, clamp to the target and hold. Show audible BPM and bars until the next change.
-- Stop/restart resets the ramp. Manual BPM controls and the first TAP exit ramp mode.
+- Stop/start resets the ramp. **Restart ramp / 最初から練習** provides a one-action reset while the ramp is running or interrupted: return to the start BPM, first beat and zero completed bars without changing settings. Disable it when stopped or in manual mode. Manual BPM controls and the first TAP exit ramp mode.
+- Metronome volume 0% must produce zero gain, including already queued clicks, while beat visualization and ramp progress continue.
+- Audio startup/scheduling failure must release partial metronome resources, restore a stopped, retryable state and show a localized error. Never stop an independent drone or timer.
 - Editing ramp settings or meter during ramp playback requires stopping; toggling the mode restarts playback.
 - Hidden pages/audio interruptions pause playback. Resume repeats the interrupted bar without counting background time or queuing catch-up clicks.
 

@@ -21,6 +21,8 @@ dist/index.self-extract.html
 - Microphone manager shared by tuner, spectrum, and recorder.
 - YIN-style pitch estimator throttled on the animation loop.
 - Metronome scheduler based on Web Audio clock look-ahead scheduling. Ramp progress advances only at complete bar boundaries. Scheduled beat snapshots separate future tempo from audible/UI tempo; tracked nodes/timers are cancelled on stop or mode changes. Visibility/audio interruptions rebase at the same bar and tempo, so stalled timers never emit a catch-up burst.
+- Restart ramp reuses stop/start cancellation. A playback-session token rejects stale interval/resume-failure work; a schedule-version token rejects old beat-on/off callbacks after stop, pause, manual override, or restart. Node ownership is registered before construction completes so partial allocation is cleaned independently.
+- Zero-volume clicks use an exact-zero gain instead of the positive exponential-envelope floor; muting cancels pending metronome gain automation without changing beat snapshots or the independent drone.
 - Drone oscillator manager.
 - Drift-corrected practice timer.
 - MediaRecorder wrapper and object-URL lifecycle.
