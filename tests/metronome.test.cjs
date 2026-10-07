@@ -21,13 +21,14 @@ function loadApp(saved = {}, options = {}) {
     getBoundingClientRect() { return { width: 300, height: 100 }; }
     fire(type) { this.events[type]?.({ target: this }); }
   }
-  for (const match of source.matchAll(/<[^>]+\bid="([^"]+)"[^>]*>/g)) {
-    const element = new Element(match[1]);
+  for (const match of source.matchAll(/<[^>]+(?:\bid|\bdata-i18n(?:-title|-aria-label)?)="[^"]*"[^>]*>/g)) {
+    const id = match[0].match(/\bid="([^"]+)"/)?.[1] || `anonymous-${elements.size}`;
+    const element = new Element(id);
     for (const attr of match[0].matchAll(/([\w-]+)="([^"]*)"/g)) {
       element.attrs[attr[1]] = attr[2];
       if (attr[1].startsWith('data-')) element.dataset[attr[1].slice(5).replace(/-([a-z])/g, (_all, letter) => letter.toUpperCase())] = attr[2];
     }
-    elements.set(match[1], element);
+    elements.set(id, element);
   }
   const document = { visibilityState: 'visible', documentElement: { lang: 'en' }, querySelector: s => elements.get(s.slice(1)), querySelectorAll: s => s === '#beatDots .beat-dot' ? elements.get('beatDots').children : /^\[data-i18n/.test(s) ? [...elements.values()].filter(e => e.attrs[s.slice(1, -1)]) : [], createElement: () => new Element(), getElementById: id => elements.get(id), addEventListener: (k, fn) => documentEvents[k] = fn };
   const faults = {};
@@ -70,7 +71,7 @@ function loadApp(saved = {}, options = {}) {
     if (runScheduler) app.metroScheduler();
   }
   function tickUntil(to) { while (now + .025 < to) advance(now + .025); advance(to); }
-  return { app, ctx, nodes, gains, faults, elements, intervals, timeouts, source, advance, tickUntil, saved: () => JSON.parse(stored), visible(value) { document.visibilityState = value; documentEvents.visibilitychange(); }, contextState(value) { ctx.state = value; ctx.statechange?.(); }, clickTimes: () => nodes.filter(n => n.stopTime > n.time).map(n => n.time) };
+  return { app, ctx, nodes, gains, faults, elements, document, intervals, timeouts, source, advance, tickUntil, saved: () => JSON.parse(stored), visible(value) { document.visibilityState = value; documentEvents.visibilitychange(); }, contextState(value) { ctx.state = value; ctx.statechange?.(); }, clickTimes: () => nodes.filter(n => n.stopTime > n.time).map(n => n.time) };
 }
 function rampFixture(extra = {}) { return loadApp({ rampEnabled: true, rampStartBpm: 60, rampTargetBpm: 100, rampIncrement: 5, rampEveryBars: 4, ...extra }); }
 function close(actual, expected) { assert.ok(Math.abs(actual - expected) < 1e-7, `${actual} != ${expected}`); }
@@ -483,4 +484,39 @@ test('ramp restart leaves an independent timer running and normal timer pause/re
   assert.equal(h.elements.get('timerDisplay').textContent, '04:29');
   h.elements.get('timerResetButton').fire('click'); assert.equal(h.elements.get('timerDisplay').textContent, '05:00');
   assert.equal(h.app.running, true); assert.equal(h.intervals.size, 1);
+});
+
+
+// Removing the localized attributes or restoring the verbose Japanese privacy
+// copy must fail these runtime checks, including repeat switches and reload.
+for (const language of ['ja', 'en']) {
+  test(`header language control names its ${language === 'ja' ? 'English' : 'Japanese'} target in ${language} UI`, () => {
+    const h = loadApp({ language });
+    h.app.applyLanguage();
+    const button = h.elements.get('languageButton');
+    assert.equal(button.textContent, language === 'ja' ? 'EN' : 'JA');
+    assert.equal(button.getAttribute('aria-label'), language === 'ja' ? '英語に切り替え' : 'Switch to Japanese');
+    assert.equal(button.title, language === 'ja' ? '英語に切り替え' : 'Switch to Japanese');
+    assert.equal(h.document.documentElement.lang, language);
+  });
+}
+
+test('header privacy copy and Help names stay localized across repeated switches and saved reloads', () => {
+  let h = loadApp({ language: 'ja' });
+  for (const language of ['ja', 'en', 'ja', 'en', 'ja']) {
+    h.app.applyLanguage();
+    const help = h.elements.get('helpButton');
+    const privacy = [...h.elements.values()].find(el => el.dataset.i18n === 'privacyStrip');
+    assert.equal(help.getAttribute('aria-label'), language === 'ja' ? '使い方と注意事項' : 'How to use & notes');
+    assert.equal(help.title, language === 'ja' ? '使い方と注意事項' : 'How to use & notes');
+    assert.equal(privacy.textContent, language === 'ja' ? '完全ローカル処理' : 'Audio is processed in your browser and is not uploaded.');
+    h.elements.get('languageButton').fire('click');
+    const next = language === 'ja' ? 'en' : 'ja';
+    assert.equal(h.saved().language, next);
+    h = loadApp(h.saved());
+    h.app.applyLanguage();
+    assert.equal(h.elements.get('languageButton').textContent, next === 'ja' ? 'EN' : 'JA');
+    assert.equal(h.elements.get('languageButton').getAttribute('aria-label'), next === 'ja' ? '英語に切り替え' : 'Switch to Japanese');
+    assert.equal(h.elements.get('languageButton').title, next === 'ja' ? '英語に切り替え' : 'Switch to Japanese');
+  }
 });
