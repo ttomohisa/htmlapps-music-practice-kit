@@ -160,3 +160,7 @@ Do not persist microphone permission, device IDs as a hard requirement, audio bu
 - No microphone signal is connected to `AudioContext.destination`.
 - Mobile UI remains usable at 360px width without horizontal page scrolling.
 - Help content documents microphone, recording, local processing, and browser limitations.
+
+## Brand icon consistency
+
+- Use the supplied tuner/metronome artwork from `assets/favicon.svg` in the header and embedded favicons, including the self-extracting loader. Preserve the complete 64×64 artwork with #16624f background and rx=16 (25%) corners.

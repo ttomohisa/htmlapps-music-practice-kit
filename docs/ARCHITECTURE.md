@@ -42,3 +42,7 @@ The microphone `MediaStreamAudioSourceNode` connects only to an `AnalyserNode`; 
 The app currently has no third-party assets, so the embedded asset bundle is empty while preserving template compatibility.
 
 The build also writes `music-practice-kit.html`, the Browser Kitty root alias, byte-identical to `dist/index.html`. Dependency-free Node tests cover the actual inline runtime in a deterministic DOM/audio fixture and verify all generated artifacts.
+
+## Brand assets
+
+`assets/favicon.svg` is the canonical supplied artwork. The source template embeds the same SVG in the full-size header and favicon. The self-extracting loader inherits the readable HTML favicon; icon regression tests compare all source and generated copies.
