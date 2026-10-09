@@ -16,6 +16,11 @@ foreach ($placeholder in @('__APP_CONFIG_JSON__','__BUILD_MANIFEST_JSON__','__EM
 if ($source -match '<script\s+[^>]*src\s*=|<link\s+[^>]*href\s*=\s*["'']https?://|@import\s+url|fetch\s*\(|XMLHttpRequest|WebSocket\s*\(') {
   Write-Error 'Source contains a disallowed runtime external-loading pattern.'; exit 1
 }
-& node --test (Join-Path $Root 'tests/metronome.test.cjs')
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+Push-Location $Root
+try {
+  & node --test
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+} finally {
+  Pop-Location
+}
 Write-Host 'Repository checks passed.'

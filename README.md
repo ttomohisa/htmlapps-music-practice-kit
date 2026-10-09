@@ -239,3 +239,7 @@ Licensed under the [MIT License](LICENSE).
 ### Automated regression tests
 
 Node.js 18+ is required for the dependency-free tests. Run `node --test` after building. Repository checks run the metronome/controller tests; standalone verification checks generated JavaScript, translations, offline constraints, the gzip payload, and the root Browser Kitty alias.
+
+## Catalog metadata
+
+`app.config.json` describes the existing standalone artifact and its network-blocking CSP. Metadata does not add runtime network permissions.
