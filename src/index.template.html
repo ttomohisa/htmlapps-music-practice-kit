@@ -608,7 +608,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19h10l-1.7-12H8.7L7 19Z"/><path d="M10.6 4.8h2.8"/><path d="M10 20.8h4"/><path d="M12.6 10v4.5"/><path d="M12.6 10l2.6-.62v3.4"/><circle cx="11.4" cy="16" r="1.65" fill="currentColor" stroke="none"/></svg>
         </div>
         <div class="brand-copy">
-          <p class="brand-name"><span>Music Practice Kit</span><span class="version-badge" id="versionBadge">v1.0.1</span></p>
+          <p class="brand-name"><span>Music Practice Kit</span><span class="version-badge" id="versionBadge">v1.0.2</span></p>
           <p class="brand-meta" data-i18n="brandMeta">チューナー・メトロノーム・練習ツール</p>
         </div>
       </div>
@@ -1714,7 +1714,7 @@
       }
 
       function updateBuildInfo() {
-        $('#versionBadge').textContent = `v${APP_CONFIG.version || '1.0.1'}`; $('#buildVersion').textContent = APP_CONFIG.version || '—';
+        $('#versionBadge').textContent = `v${APP_CONFIG.version || '1.0.2'}`; $('#buildVersion').textContent = APP_CONFIG.version || '—';
         $('#builtAt').textContent = BUILD_MANIFEST.generatedAtUtc || BUILD_MANIFEST.generatedAt || '—'; $('#dependencyCount').textContent = String(BUILD_MANIFEST.dependencyCount ?? 0);
       }
       function initControls() {
