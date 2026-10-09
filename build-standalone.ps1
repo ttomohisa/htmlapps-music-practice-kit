@@ -66,6 +66,11 @@ Write-Utf8NoBom (Join-Path $Root 'music-practice-kit.html') $output
 Write-Utf8NoBom $ManifestPath (ConvertTo-CompactJson $buildManifest)
 Write-Utf8NoBom (Join-Path $DistDir '.nojekyll') ''
 
+# Inherit the readable build favicon rather than maintaining a second icon.
+$faviconMatch = [regex]::Match($output, '(?i)<link\b(?=[^>]*\brel\s*=\s*["'']icon["''])[^>]*>')
+if (-not $faviconMatch.Success) { throw 'The readable HTML must contain a favicon.' }
+$faviconTag = $faviconMatch.Value
+
 # Generate gzip self-extracting HTML compatible with the template release model.
 $inputBytes = [Text.Encoding]::UTF8.GetBytes($output)
 $memory = New-Object IO.MemoryStream
@@ -84,6 +89,7 @@ $selfExtract = @"
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <title>$($config.name)</title>
+$faviconTag
 <style>html,body{margin:0;min-height:100%;background:#f5f5f2;color:#20211f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{display:grid;place-items:center}.loader{padding:24px;text-align:center}.spinner{width:32px;height:32px;margin:0 auto 12px;border:3px solid #dadbd6;border-top-color:#16624f;border-radius:50%;animation:r .8s linear infinite}@keyframes r{to{transform:rotate(360deg)}}</style>
 </head>
 <body><div class="loader"><div class="spinner"></div><div>Opening Music Practice Kit…</div></div>

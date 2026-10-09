@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 - 2026-10-10
+
+- Replace the app icon with the supplied artwork in the canonical SVG, full-size header, and embedded favicon.
+- Regenerate release HTML and the Browser Kitty root alias; verify icon and compressed-payload parity.
+- Inherit the readable HTML favicon in the self-extracting loader.
+
 ## 1.0.2 - 2026-10-09
 
 - Added a genuine screenshot from the v1.0.2 PR preview: English tuner with microphone off.

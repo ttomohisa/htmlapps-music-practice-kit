@@ -3,3 +3,4 @@
 *.html text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+assets/favicon.svg text eol=lf
