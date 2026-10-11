@@ -24,3 +24,7 @@ try {
   Pop-Location
 }
 Write-Host 'Repository checks passed.'
+
+# Keep internal QA/implementation prose out of user-facing help.
+& node (Join-Path $Root "tests/help-copy.test.cjs")
+if ($LASTEXITCODE -ne 0) { throw "User-facing help copy regression failed." }

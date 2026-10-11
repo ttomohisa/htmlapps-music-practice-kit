@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Clarify Japanese and English help by removing internal layout, implementation, and audit commentary while preserving usage guidance and cautions.
+
 ## 1.0.4 - 2026-10-11
 
 - Keep the background page still while a native modal is open, preserving the existing Help/confirmation layouts and local-processing shield.
