@@ -37,6 +37,7 @@
     }
     * { box-sizing: border-box; }
     html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+    html:has(dialog:modal), body:has(dialog:modal) { overflow: hidden; overscroll-behavior: none; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -625,7 +626,7 @@
 </svg>
         </div>
         <div class="brand-copy">
-          <p class="brand-name"><span>Music Practice Kit</span><span class="version-badge" id="versionBadge">v1.0.3</span></p>
+          <p class="brand-name"><span>Music Practice Kit</span><span class="version-badge" id="versionBadge">v1.0.4</span></p>
           <p class="brand-meta" data-i18n="brandMeta">チューナー・メトロノーム・練習ツール</p>
         </div>
       </div>
@@ -881,6 +882,7 @@
       <h3 data-i18n="helpRampTitle">少しずつ速くする練習</h3><p data-i18n="helpRampBody">開始・目標BPM、増分、変更間隔を設定してオンにし、メトロノームを開始します。指定した小節数を終えた次の小節頭でテンポを上げ、目標で維持します。停止後は開始BPMからやり直します。BPMの手動操作・TAPで通常モードに戻ります。ページを離れたり音声が中断された場合は一時停止し、戻ると同じテンポで小節をやり直します。</p>
       <h3 data-i18n="helpTunerTitle">チューナーのコツ</h3><ul><li data-i18n="helpTuner1">周囲が静かな場所で、1音ずつはっきり鳴らすと安定しやすくなります。</li><li data-i18n="helpTuner2">入力感度を上げすぎると周囲の雑音を拾いやすくなります。反応しない場合だけ少し調整してください。</li><li data-i18n="helpTuner3">A4基準ピッチは430.0〜450.0 Hzで変更できます。メトロノームとは独立し、ドローン音にも反映されます。</li></ul>
       <h3 data-i18n="helpNotesTitle">注意事項</h3><ul><li data-i18n="helpNoteMic">マイク機能はブラウザーの権限と安全なコンテキストの制約を受けます。ローカルHTMLで使えない場合はHTTPSまたはlocalhostで開いてください。</li><li data-i18n="helpNoteRecording">録音形式はブラウザーが対応する形式を自動選択します。録音データはページを閉じると失われます。</li><li data-i18n="helpNoteAudio">メトロノームやドローン音をスピーカーから鳴らすと、録音やチューナーのマイクがその音を拾う場合があります。必要に応じてイヤホンを使ってください。</li><li data-i18n="helpNoteWake">「画面を消さない」は対応ブラウザーでのみ動作し、OSの省電力状態などにより解除されることがあります。</li></ul>
+      <p data-i18n="helpModalScroll">ヘルプや確認画面を開いている間は、背後のページはスクロールしません。閉じると元の位置から操作を続けられます。</p>
       <p class="dialog-note" data-i18n="helpOffline">メトロノーム、TAP、ドローン、タイマーはマイク権限がなくても使えます。</p>
       <!-- APP:HELP:END -->
     </div>
@@ -953,6 +955,7 @@
           navTuner: 'チューナー', navMetro: 'メトロノーム', navPractice: '練習', buildInfo: 'ビルド情報', appVersion: 'アプリバージョン', builtAt: '生成日時', dependencies: '内包依存数', footer: 'Music Practice Kit · ローカル処理の単一HTML',
           helpBasicsTitle: '基本操作', helpStep1: 'チューナーの「マイクを開始」を押し、ブラウザーのマイク権限を許可します。楽器モードでは弦をタップすると狙う音を固定できます。', helpStep2: 'メトロノームはBPMをスライダーか±ボタンで調整できます。TAPをリズムに合わせて3回以上押すとテンポを測れます。', helpStep3: '練習ではドローン音、タイマー、録音、スペクトラムを必要なものだけ使えます。',
           helpPrivacyTitle: 'プライバシー', helpPrivacyBody: 'マイク音声・録音・設定はこのページ内で処理され、このアプリから外部へ送信されません。録音は保存ボタンを押したときだけファイルとして端末へ保存します。',
+          helpModalScroll: 'ヘルプや確認画面を開いている間は、背後のページはスクロールしません。閉じると元の位置から操作を続けられます。',
           helpTunerTitle: 'チューナーのコツ', helpTuner1: '周囲が静かな場所で、1音ずつはっきり鳴らすと安定しやすくなります。', helpTuner2: '入力感度を上げすぎると周囲の雑音を拾いやすくなります。反応しない場合だけ少し調整してください。', helpTuner3: 'A4基準ピッチは430.0〜450.0 Hzで変更できます。メトロノームとは独立し、ドローン音にも反映されます。',
           helpNotesTitle: '注意事項', helpNoteMic: 'マイク機能はブラウザーの権限と安全なコンテキストの制約を受けます。ローカルHTMLで使えない場合はHTTPSまたはlocalhostで開いてください。', helpNoteRecording: '録音形式はブラウザーが対応する形式を自動選択します。録音データはページを閉じると失われます。', helpNoteAudio: 'メトロノームやドローン音をスピーカーから鳴らすと、録音やチューナーのマイクがその音を拾う場合があります。必要に応じてイヤホンを使ってください。', helpNoteWake: '「画面を消さない」は対応ブラウザーでのみ動作し、OSの省電力状態などにより解除されることがあります。', helpOffline: 'メトロノーム、TAP、ドローン、タイマーはマイク権限がなくても使えます。',
           secureReady: 'マイク対応環境', secureLimited: 'マイク制限の可能性', micPermissionDenied: 'マイクの使用が許可されませんでした', micStartFailed: 'マイクを開始できませんでした', micStarted: 'マイクを開始しました', micStopped: 'マイクを停止しました', deviceChanged: '入力デバイスを切り替えました', deviceRefreshFailed: 'デバイス一覧を更新できませんでした',
@@ -982,6 +985,7 @@
           navTuner: 'Tuner', navMetro: 'Metronome', navPractice: 'Practice', buildInfo: 'Build information', appVersion: 'App version', builtAt: 'Built at', dependencies: 'Embedded dependencies', footer: 'Music Practice Kit · Local-first single HTML',
           helpBasicsTitle: 'Basics', helpStep1: 'Press Start microphone and allow microphone access. In instrument modes, tap a string to lock the target note.', helpStep2: 'Adjust BPM with the slider or +/- buttons. Tap TAP at least three times to measure tempo from your rhythm.', helpStep3: 'Use the drone, timer, recorder, and spectrum only when you need them.',
           helpPrivacyTitle: 'Privacy', helpPrivacyBody: 'Microphone audio, recordings, and settings are processed in this page and are not sent outside by this app. A recording leaves the page only when you explicitly save the file.',
+          helpModalScroll: 'The page behind Help or a confirmation stays still while it is open. Close the dialog to continue from the same page position.',
           helpTunerTitle: 'Tuner tips', helpTuner1: 'Use a quiet room and play one clear note at a time for steadier detection.', helpTuner2: 'High sensitivity can react to room noise. Adjust it only when notes are not detected.', helpTuner3: 'Reference A4 can be set from 430.0 to 450.0 Hz and also changes the drone pitch.',
           helpNotesTitle: 'Notes', helpNoteMic: 'Microphone features depend on browser permission and secure-context rules. If a local HTML file cannot access the microphone, use HTTPS or localhost.', helpNoteRecording: 'The recording format is chosen from formats supported by your browser. Recording data is lost when you close the page.', helpNoteAudio: 'Metronome and drone audio played through speakers can be picked up by the tuner or recorder. Use headphones when appropriate.', helpNoteWake: 'Keep screen awake works only where supported and can still be released by the OS or browser.', helpOffline: 'Metronome, TAP, drone, and timer work without microphone permission.',
           secureReady: 'Microphone-capable context', secureLimited: 'Microphone may be restricted', micPermissionDenied: 'Microphone permission was denied', micStartFailed: 'Could not start the microphone', micStarted: 'Microphone started', micStopped: 'Microphone stopped', deviceChanged: 'Input device changed', deviceRefreshFailed: 'Could not refresh input devices',
