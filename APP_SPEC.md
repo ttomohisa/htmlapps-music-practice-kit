@@ -137,6 +137,7 @@ Do not persist microphone permission, device IDs as a hard requirement, audio bu
 - Visible focus states and keyboard-accessible controls.
 - `aria-live` for permission, tuner, recorder, and timer status where appropriate.
 - Respect `prefers-reduced-motion`.
+- An open native modal locks background scrolling on both the document root and body; closing it restores page scrolling without changing the page position. Keep Help content independently scrollable and preserve existing dialog geometry.
 
 ## 13. Non-goals
 

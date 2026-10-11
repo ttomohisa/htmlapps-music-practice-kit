@@ -10,7 +10,7 @@ test('app metadata describes the existing standalone output and network policy',
   const config = JSON.parse(read('app.config.json'));
   assert.equal(config.build?.output, 'dist/index.html');
   assert.equal(config.build?.blockRuntimeNetwork, true);
-  assert.equal(config.version, '1.0.3');
+  assert.equal(config.version, '1.0.4');
   assert.equal(config.build.selfExtract.output, 'dist/index.self-extract.html');
   assert.match(read('dist/index.html'), /connect-src 'none'/);
 });

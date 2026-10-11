@@ -73,6 +73,8 @@ This app currently has no third-party runtime dependency, so the build does not 
 
 ## Usage
 
+Help and confirmation dialogs keep the background page still while open. Closing a dialog lets you continue at the same page position.
+
 ### Tuner
 
 1. Open **Tuner** and allow microphone access.
