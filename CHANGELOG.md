@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4 - 2026-10-11
+
+- Keep the background page still while a native modal is open, preserving the existing Help/confirmation layouts and local-processing shield.
+- Add bilingual Help guidance and CSS contracts for root/body modal scroll locking. Browser wheel, dismissal, focus and content-reachability checks remain separate.
+
 ## 1.0.3 - 2026-10-10
 
 - Replace the app icon with the supplied artwork in the canonical SVG, full-size header, and embedded favicon.
