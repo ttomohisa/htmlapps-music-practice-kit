@@ -48,3 +48,9 @@ test('existing build information is unique and the final Help body item, not pag
 });
 
 test('exact local-processing label uses the canonical English wording', () => assert.match(source, /privacyStrip: 'Fully local processing'/));
+
+test('Help retains its header while only its allocated body scrolls to build details', () => {
+  assert.match(source, /#helpDialog\[open\]\s*\{[^}]*display:\s*flex[^}]*flex-direction:\s*column/);
+  assert.match(source, /#helpDialog \.dialog-header\s*\{[^}]*flex:\s*0 0 auto/);
+  assert.match(source, /#helpDialog \.dialog-body\s*\{[^}]*min-height:\s*0[^}]*flex:\s*1 1 auto[^}]*max-height:\s*none[^}]*overflow:\s*auto/);
+});
