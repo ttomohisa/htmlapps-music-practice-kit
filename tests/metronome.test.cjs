@@ -509,7 +509,7 @@ test('header privacy copy and Help names stay localized across repeated switches
     const privacy = [...h.elements.values()].find(el => el.dataset.i18n === 'privacyStrip');
     assert.equal(help.getAttribute('aria-label'), language === 'ja' ? '使い方と注意事項' : 'How to use & notes');
     assert.equal(help.title, language === 'ja' ? '使い方と注意事項' : 'How to use & notes');
-    assert.equal(privacy.textContent, language === 'ja' ? '完全ローカル処理' : 'Audio is processed in your browser and is not uploaded.');
+    assert.equal(privacy.textContent, language === 'ja' ? '完全ローカル処理' : 'Fully local processing');
     h.elements.get('languageButton').fire('click');
     const next = language === 'ja' ? 'en' : 'ja';
     assert.equal(h.saved().language, next);

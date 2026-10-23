@@ -479,6 +479,9 @@
     .dialog-close { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
     .dialog-close:hover { background: var(--surface-hover); } .dialog-close svg { width: 19px; height: 19px; }
     .dialog-body { padding: 19px 20px 26px; overflow: auto; max-height: calc(100dvh - 92px); }
+    #helpDialog[open] { display: flex; flex-direction: column; }
+    #helpDialog .dialog-header { flex: 0 0 auto; }
+    #helpDialog .dialog-body { min-height: 0; flex: 1 1 auto; max-height: none; overflow: auto; overscroll-behavior: contain; }
     .dialog-body h3 { margin: 24px 0 8px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; }
     .dialog-body h3:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
     .dialog-body p, .dialog-body li { color: var(--muted); font-size: 13px; line-height: 1.7; }
@@ -496,6 +499,7 @@
     }
 
     @media (max-width: 680px) {
+      footer { display: none; }
       :root { --header-height: 58px; --bottom-nav-height: calc(68px + env(safe-area-inset-bottom)); }
       .header-inner { padding-block: 8px; }
       .brand-mark { width: 34px; height: 34px; border-radius:25%; }
@@ -849,11 +853,6 @@
       </section>
     </div>
     <!-- APP:END -->
-
-    <details class="build-details">
-      <summary data-i18n="buildInfo">ビルド情報</summary>
-      <div class="build-grid"><div class="build-item"><span data-i18n="appVersion">アプリバージョン</span><strong id="buildVersion">—</strong></div><div class="build-item"><span data-i18n="builtAt">生成日時</span><strong id="builtAt">—</strong></div><div class="build-item"><span data-i18n="dependencies">内包依存数</span><strong id="dependencyCount">0</strong></div></div>
-    </details>
   </main>
 
   <footer><span data-i18n="footer">Music Practice Kit · ローカル処理の単一HTML</span></footer>
@@ -883,6 +882,10 @@
       <h3 data-i18n="helpTunerTitle">チューナーのコツ</h3><ul><li data-i18n="helpTuner1">周囲が静かな場所で、1音ずつはっきり鳴らすと安定しやすくなります。</li><li data-i18n="helpTuner2">入力感度を上げすぎると周囲の雑音を拾いやすくなります。反応しない場合だけ少し調整してください。</li><li data-i18n="helpTuner3">A4基準ピッチは430.0〜450.0 Hzで変更できます。メトロノームとは独立し、ドローン音にも反映されます。</li></ul>
       <h3 data-i18n="helpNotesTitle">注意事項</h3><ul><li data-i18n="helpNoteMic">マイク機能はブラウザーの権限と安全なコンテキストの制約を受けます。ローカルHTMLで使えない場合はHTTPSまたはlocalhostで開いてください。</li><li data-i18n="helpNoteRecording">録音形式はブラウザーが対応する形式を自動選択します。録音データはページを閉じると失われます。</li><li data-i18n="helpNoteAudio">メトロノームやドローン音をスピーカーから鳴らすと、録音やチューナーのマイクがその音を拾う場合があります。必要に応じてイヤホンを使ってください。</li><li data-i18n="helpNoteWake">「画面を消さない」は対応ブラウザーでのみ動作し、OSの省電力状態などにより解除されることがあります。</li></ul>
       <p class="dialog-note" data-i18n="helpOffline">メトロノーム、TAP、ドローン、タイマーはマイク権限がなくても使えます。</p>
+      <details class="build-details">
+        <summary data-i18n="buildInfo">ビルド情報</summary>
+        <div class="build-grid"><div class="build-item"><span data-i18n="appVersion">アプリバージョン</span><strong id="buildVersion">—</strong></div><div class="build-item"><span data-i18n="builtAt">生成日時</span><strong id="builtAt">—</strong></div><div class="build-item"><span data-i18n="dependencies">内包依存数</span><strong id="dependencyCount">0</strong></div></div>
+      </details>
       <!-- APP:HELP:END -->
     </div>
   </dialog>
@@ -963,7 +966,7 @@
           invalidReference: 'A4は430.0〜450.0 Hzで指定してください', selectMicFirst: '録音にはマイクが必要です', recordFailed: '録音を開始できませんでした', nothingToSave: '保存できる録音がありません', confirmTitle: '確認', confirmReplaceRecording: '未保存の録音があります。新しい録音で置き換えますか？', confirmClearRecording: '現在の録音を消去しますか？', cancel: 'キャンセル', replaceRecording: '置き換える', clearRecordingAction: '消去する'
         },
         en: {
-          brandMeta: 'Tuner · Metronome · Practice tools', privacyStrip: 'Audio is processed in your browser and is not uploaded.',
+          brandMeta: 'Tuner · Metronome · Practice tools', privacyStrip: 'Fully local processing',
           switchLanguage: 'Switch to Japanese', helpTitle: 'How to use & notes', close: 'Close', tunerTitle: 'Tuner', tunerSubtitle: 'Chromatic / Guitar / Ukulele / Bass',
           micOff: 'Microphone off', micOn: 'Listening', micError: 'Microphone unavailable', tunerModeLabel: 'Tuner mode', modeChromatic: 'Chromatic', modeGuitar: 'Guitar', modeUkulele: 'Ukulele', modeBass: 'Bass',
           tunerWaiting: 'Start the microphone to detect pitch', tunerListening: 'Waiting for a note…', tunerLowSignal: 'Input is too quiet', tunerDetected: 'Detecting pitch',
