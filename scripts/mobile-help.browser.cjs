@@ -65,8 +65,10 @@ async function main() {
             if (file === 'dist/index.html' && [1360, 320].includes(width)) {
               await page.screenshot({ path: path.join(results, `help-${language}-${width}.png`) });
             }
+            const dialogBox = await page.locator('#helpDialog').boundingBox();
+            assert.ok(dialogBox.y > 1, label + ': top coordinate is genuine backdrop');
             const beforeScroll = await page.evaluate(() => scrollY);
-            await page.mouse.move(2, Math.floor(height / 2));
+            await page.mouse.move(2, 1);
             await page.mouse.wheel(0, 400);
             await page.waitForTimeout(100);
             assert.equal(await page.evaluate(() => scrollY), beforeScroll, label + ': background locked');
@@ -76,7 +78,7 @@ async function main() {
             await page.locator('#closeHelpButton').click();
             assert.equal(await page.locator('#helpDialog').isVisible(), false, label + ': reopen and Close');
             await page.locator('#helpButton').click();
-            await page.mouse.click(2, Math.floor(height / 2));
+            await page.mouse.click(2, 1);
             assert.equal(await page.locator('#helpDialog').isVisible(), false, label + ': backdrop');
             assert.deepEqual(errors, [], label + ': console errors');
             assert.deepEqual(requests, [], label + ': external runtime requests');
