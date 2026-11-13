@@ -110,8 +110,8 @@
       border-radius: 999px;
       color: var(--muted);
       background: var(--surface-muted);
-      font-size: 10px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 650;
       vertical-align: 2px;
     }
     .brand-meta { margin: 2px 0 0; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -143,7 +143,7 @@
       color: var(--muted);
       font-size: 12px;
     }
-    .privacy-copy { display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .privacy-copy { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--accent); font-weight: 500; }
     .privacy-copy svg { width: 15px; height: 15px; flex: 0 0 auto; color: var(--accent); }
     .secure-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); white-space: nowrap; }
     .secure-badge.good { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 26%, var(--line)); background: var(--accent-soft); }
@@ -433,7 +433,7 @@
     .build-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 16px 16px; }
     .build-item { padding: 10px; border-radius: 9px; background: var(--surface-muted); }
     .build-item span { display: block; color: var(--muted); font-size: 9px; } .build-item strong { display: block; margin-top: 2px; font-size: 11px; overflow-wrap: anywhere; }
-    footer { width: min(1180px, 100%); margin: 0 auto; padding: 0 clamp(14px, 2.8vw, 30px) 30px; color: var(--muted); font-size: 11px; }
+    footer { width: min(1180px, 100%); margin: 0 auto; padding: 0 clamp(14px, 2.8vw, 30px) 30px; color: var(--muted); font-size: 12px; }
 
     .toast {
       position: fixed;
@@ -476,8 +476,8 @@
     dialog::backdrop { background: rgba(15, 17, 14, .50); backdrop-filter: blur(4px); }
     .dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
     .dialog-header h2 { margin: 0; font-size: 17px; }
-    .dialog-close { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
-    .dialog-close:hover { background: var(--surface-hover); } .dialog-close svg { width: 19px; height: 19px; }
+    .dialog-close { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 9px; background: transparent; cursor: pointer; }
+    .dialog-close:hover { background: var(--surface-hover); } .dialog-close svg { width: 18px; height: 18px; }
     .dialog-body { padding: 19px 20px 26px; overflow: auto; max-height: calc(100dvh - 92px); }
     #helpDialog[open] { display: flex; flex-direction: column; }
     #helpDialog .dialog-header { flex: 0 0 auto; }
@@ -855,7 +855,7 @@
     <!-- APP:END -->
   </main>
 
-  <footer><span data-i18n="footer">Music Practice Kit · ローカル処理の単一HTML</span></footer>
+  <footer><span>Music Practice Kit</span> · MIT License · <span data-i18n="footer">練習はブラウザー内で完結</span></footer>
 
   <nav class="bottom-nav" aria-label="Primary">
     <button type="button" class="active" data-target="tunerSection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v7a6 6 0 0 0 12 0V4M6 8h12M12 8v12"/></svg><span data-i18n="navTuner">チューナー</span></button>
@@ -867,12 +867,12 @@
   <div class="sr-only" id="liveStatus" aria-live="polite"></div>
 
   <dialog class="confirm-dialog" id="confirmDialog" aria-labelledby="confirmTitle">
-    <div class="dialog-header"><h2 id="confirmTitle">確認</h2><button class="dialog-close" id="confirmClose" type="button" data-i18n-aria-label="close" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+    <div class="dialog-header"><h2 id="confirmTitle">確認</h2><button class="dialog-close" id="confirmClose" type="button" data-i18n-aria-label="close" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12"/><path d="M18 6 6 18"/></svg></button></div>
     <div class="dialog-body"><p class="confirm-message" id="confirmMessage"></p><div class="confirm-actions"><button class="button" id="confirmCancel" type="button">キャンセル</button><button class="button danger-solid" id="confirmOk" type="button">実行する</button></div></div>
   </dialog>
 
   <dialog id="helpDialog" aria-labelledby="helpTitle">
-    <div class="dialog-header"><h2 id="helpTitle" data-i18n="helpTitle">使い方と注意事項</h2><button class="dialog-close" id="closeHelpButton" type="button" data-i18n-aria-label="close" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div>
+    <div class="dialog-header"><h2 id="helpTitle" data-i18n="helpTitle">使い方と注意事項</h2><button class="dialog-close" id="closeHelpButton" type="button" data-i18n-aria-label="close" aria-label="閉じる"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12"/><path d="M18 6 6 18"/></svg></button></div>
     <div class="dialog-body">
       <!-- APP:HELP:BEGIN -->
       <h3 data-i18n="helpBasicsTitle">基本操作</h3>
@@ -954,7 +954,7 @@
           recordTitle: '録音', recordSubtitle: '演奏を端末内で録音して聴き返す', recordReady: 'マイクを使って録音します', startRecording: '録音開始', stopRecording: '録音停止', recording: '録音中', saveRecording: '録音を保存', clearRecording: '消去', recordingSaved: '録音を保存しました', recordingCleared: '録音を消去しました', recordingUnsupported: 'このブラウザーは録音機能に対応していません',
           micSettingsTitle: 'マイク入力', micSettingsSubtitle: '利用できる入力デバイスと状態', inputDevice: '入力デバイス', defaultDevice: 'デフォルト', refreshDevices: 'デバイスを更新', micEnvironmentNote: 'マイク名は権限を許可した後に表示される場合があります。',
           spectrumTitle: '周波数スペクトラム', spectrumSubtitle: 'マイク入力の低〜中域をリアルタイム表示', spectrumEmpty: 'マイクを開始するとスペクトラムを表示します',
-          navTuner: 'チューナー', navMetro: 'メトロノーム', navPractice: '練習', buildInfo: 'ビルド情報', appVersion: 'アプリバージョン', builtAt: '生成日時', dependencies: '内包依存数', footer: 'Music Practice Kit · ローカル処理の単一HTML',
+          navTuner: 'チューナー', navMetro: 'メトロノーム', navPractice: '練習', buildInfo: 'ビルド情報', appVersion: 'アプリバージョン', builtAt: '生成日時', dependencies: '内包依存数', footer: '練習はブラウザー内で完結',
           helpBasicsTitle: '基本操作', helpStep1: 'チューナーの「マイクを開始」を押し、ブラウザーのマイク権限を許可します。楽器モードでは弦をタップすると狙う音を固定できます。', helpStep2: 'メトロノームはBPMをスライダーか±ボタンで調整できます。TAPをリズムに合わせて3回以上押すとテンポを測れます。', helpStep3: '練習ではドローン音、タイマー、録音、スペクトラムを必要なものだけ使えます。',
           helpPrivacyTitle: 'プライバシー', helpPrivacyBody: 'マイク音声・録音・設定はこのページ内で処理され、このアプリから外部へ送信されません。録音は保存ボタンを押したときだけファイルとして端末へ保存します。',
 
@@ -984,7 +984,7 @@
           recordTitle: 'Recorder', recordSubtitle: 'Record locally, listen back, and save', recordReady: 'Uses the current microphone input', startRecording: 'Start recording', stopRecording: 'Stop recording', recording: 'Recording', saveRecording: 'Save recording', clearRecording: 'Clear', recordingSaved: 'Recording saved', recordingCleared: 'Recording cleared', recordingUnsupported: 'Recording is not supported by this browser',
           micSettingsTitle: 'Microphone input', micSettingsSubtitle: 'Available input devices and status', inputDevice: 'Input device', defaultDevice: 'Default', refreshDevices: 'Refresh devices', micEnvironmentNote: 'Device names may appear only after microphone permission is granted.',
           spectrumTitle: 'Frequency spectrum', spectrumSubtitle: 'Live low-to-mid frequency view of the microphone input', spectrumEmpty: 'Start the microphone to show the spectrum',
-          navTuner: 'Tuner', navMetro: 'Metronome', navPractice: 'Practice', buildInfo: 'Build information', appVersion: 'App version', builtAt: 'Built at', dependencies: 'Embedded dependencies', footer: 'Music Practice Kit · Local-first single HTML',
+          navTuner: 'Tuner', navMetro: 'Metronome', navPractice: 'Practice', buildInfo: 'Build information', appVersion: 'App version', builtAt: 'Built at', dependencies: 'Embedded dependencies', footer: 'Practice stays in the browser',
           helpBasicsTitle: 'Basics', helpStep1: 'Press Start microphone and allow microphone access. In instrument modes, tap a string to lock the target note.', helpStep2: 'Adjust BPM with the slider or +/- buttons. Tap TAP at least three times to measure tempo from your rhythm.', helpStep3: 'Use the drone, timer, recorder, and spectrum only when you need them.',
           helpPrivacyTitle: 'Privacy', helpPrivacyBody: 'Microphone audio, recordings, and settings are processed in this page and are not sent outside by this app. A recording leaves the page only when you explicitly save the file.',
 
